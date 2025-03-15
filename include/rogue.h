@@ -1,8 +1,9 @@
 #ifndef ROGUE_H // This prevents rogue.h from being compiled multiple times.
 #define ROGUE_H
 
-#include <curses.h>
+#include "curses.h"
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct
 {
@@ -16,6 +17,13 @@ typedef struct
     bool walkable;
 } Tile;
 
+typedef struct
+{
+    int height;
+    int width;
+    Position pos;
+    Position center;
+} Room;
 
 typedef struct
 {
@@ -42,6 +50,11 @@ void freeMap(void);
 Entity* createPlayer(Position start_pos);
 void handleInput(int input);
 void movePlayer(Position newPos);
+
+// room.c functions
+Room createRoom(int y, int x, int height, int width);
+void addRoomToMap(Room room);
+void connectRoomCenters(Position centerOne, Position centerTwo);
 
 // externs
 extern const int MAP_HEIGHT;
