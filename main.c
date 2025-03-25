@@ -37,7 +37,7 @@ int main(void) {
     int input;
     while (input = _getch()) {
         if (input == 'q') break;
-        handleInput(input);
+        handleInput(input, map);
 
         drawTileMap(map);
         drawAt(player->position.x, player->position.y, player->renderable.fg, player->renderable.bg, player->renderable.ch);

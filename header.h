@@ -65,7 +65,7 @@ Entity* createEntity(int x, int y, char ch, int fg, int bg);
 
 /* Input Defines */
 // input.c commands
-void handleInput(int input);
+void handleInput(int input, Tile** map);
 
 /* Externs */
 extern const int MAP_HEIGHT;
