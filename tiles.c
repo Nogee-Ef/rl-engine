@@ -8,6 +8,7 @@ Tile** createTilesMap() {
                 tiles[y][x].ch = ' ';
                 tiles[y][x].fg = WHITE;
                 tiles[y][x].bg = BLACK;
+                tiles[y][x].walkable = TRUE;
         }
     }
 

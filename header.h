@@ -14,6 +14,7 @@ typedef struct {
     char ch;
     int fg;
     int bg;
+    int walkable;
 } Tile;
 
 // tiles.c commands
@@ -38,16 +39,7 @@ void enableVirtualTerminalProcessing(void);
 void drawAt(int x, int y, int fg, int bg, char toPrint);
 void drawTileMap(Tile** map);
 
-/* Input Defines */
-// input.c commands
-void handleInput(int input);
-
 /* Entity Defines */
-typedef struct {
-    Position position;
-    Renderable renderable;
-} Entity;
-
 typedef struct {
     int x;
     int y;
@@ -59,8 +51,21 @@ typedef struct {
     int bg;
 } Renderable;
 
+typedef struct {
+    Position position;
+    Renderable renderable;
+} Entity;
+
+typedef struct {
+    int walkable;
+} Movement;
+
 // entity.c commands
 Entity* createEntity(int x, int y, char ch, int fg, int bg);
+
+/* Input Defines */
+// input.c commands
+void handleInput(int input);
 
 /* Externs */
 extern const int MAP_HEIGHT;
