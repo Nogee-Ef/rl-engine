@@ -25,3 +25,10 @@ void drawTileMap(Tile** map) {
         }
     }
 }
+
+void displaySetup(void) {
+    enableVirtualTerminalProcessing();
+    SetConsoleOutputCP(CP_UTF8);
+    printf(HIDE);
+    printf(CLEAR);
+}

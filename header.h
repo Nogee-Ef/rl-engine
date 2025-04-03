@@ -20,6 +20,7 @@ typedef struct {
 // tiles.c commands
 Tile** createTilesMap();
 void freeMap(Tile** map);
+void generateFloor(Tile** map, int maxRooms);
 
 /* Display Defines */
 #define CLEAR "\x1B[2J\x1b[3J" // Clears the terminal AND the scroll back.
@@ -35,7 +36,7 @@ void freeMap(Tile** map);
 #define WHITE 37
 
 // display.c commands
-void enableVirtualTerminalProcessing(void);
+void displaySetup(void);
 void drawAt(int x, int y, int fg, int bg, char toPrint);
 void drawTileMap(Tile** map);
 
@@ -66,6 +67,19 @@ Entity* createEntity(int x, int y, char ch, int fg, int bg);
 /* Input Defines */
 // input.c commands
 void handleInput(int input, Tile** map);
+
+/* Hash Table Defines*/
+#define HASHSIZE 101
+
+typedef struct { /* table entry: */
+    struct nlist *next; /* next entry in chain */
+    char *name; /* defined name */
+    char *defn; /* replacement text */
+} nlist;
+
+// hashtable.c commands
+// nlist *lookup(char *s, nlist *hashtab[HASHSIZE]);
+// nlist *install(char *name, char *defn, nlist *hashtab[HASHSIZE]);
 
 /* Externs */
 extern const int MAP_HEIGHT;
