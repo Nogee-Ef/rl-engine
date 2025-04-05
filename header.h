@@ -69,17 +69,21 @@ Entity* createEntity(int x, int y, char ch, int fg, int bg);
 void handleInput(int input, Tile** map);
 
 /* Hash Table Defines*/
-#define HASHSIZE 101
+typedef struct entry_t { /* table entry: */
+    char *key;
+    char *value;
+    struct entry_t *next; /* next entry in chain */
+} entry_t;
 
-typedef struct { /* table entry: */
-    struct nlist *next; /* next entry in chain */
-    char *name; /* defined name */
-    char *defn; /* replacement text */
-} nlist;
+typedef struct {
+    entry_t **entries;
+    unsigned tableSize;
+} hashtable_t;
 
 // hashtable.c commands
-// nlist *lookup(char *s, nlist *hashtab[HASHSIZE]);
-// nlist *install(char *name, char *defn, nlist *hashtab[HASHSIZE]);
+hashtable_t *createHashtable(unsigned tableSize);
+entry_t *lookup(char *key, hashtable_t hashtable);
+entry_t *install(char *key, char *value, hashtable_t hashtable);
 
 /* Externs */
 extern const int MAP_HEIGHT;
