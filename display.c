@@ -15,7 +15,7 @@ void drawAt(int x, int y, int fg, int bg, char toPrint) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 
     // Print the string.
-    printf("%s%d%s%s%d%s%c%s", "\x1b[", fg, "m", "\x1b[", bg + 10, "m", toPrint, RESET);
+    printf("\x1b[%dm\x1b[%dm%c%s", fg, bg + 10, toPrint, RESET);
 }
 
 void drawTileMap(Tile** map) {

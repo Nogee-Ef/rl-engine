@@ -1,18 +1,24 @@
 #include "header.h"
 
-void moveEntity(Tile** map, int x, int y) {
+void moveEntity(Tile** map, int dx, int dy) {
     // Check if the position is within the bounds of the map.
-    if (player->position.x + x > 0 && player->position.x + x < MAP_WIDTH && player->position.y + y > 0 && player->position.y + y < MAP_HEIGHT) {
+    if (player->position.x + dx > 0 && player->position.x + dx < MAP_WIDTH && player->position.y + dy > 0 && player->position.y + dy < MAP_HEIGHT) {
         // Check if the position is on a walkable tile
-        if (map[player->position.y + y][player->position.x + x].walkable) {
+        if (map[player->position.y + dy][player->position.x + dx].walkable) {
             // Move the entity
-            player->position.x = player->position.x + x;
-            player->position.y = player->position.y + y;
+            player->position.x = player->position.x + dx;
+            player->position.y = player->position.y + dy;
         }
     }
 }
 
 void handleInput(int input, Tile** map) {
+    /*
+    Position coordList[10] = { [-1, 1], };
+    if (input > 48 && input < 57) {
+        moveEntity(map, coordList[input-49].x, coordList[input-49].y);
+    }
+    */
     switch (input) {
         case 49: // NUMPAD Down Left
             moveEntity(map, -1, 1);

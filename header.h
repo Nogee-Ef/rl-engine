@@ -42,19 +42,21 @@ void drawTileMap(Tile** map);
 
 /* Entity Defines */
 typedef struct {
+    int id;
     int x;
     int y;
-} Position;
+} PositionComponent;
 
 typedef struct {
+    int id;
     char ch;
     int fg;
     int bg;
-} Renderable;
+} RenderableComponent;
 
 typedef struct {
-    Position position;
-    Renderable renderable;
+    PositionComponent position;
+    RenderableComponent renderable;
 } Entity;
 
 typedef struct {
@@ -67,23 +69,6 @@ Entity* createEntity(int x, int y, char ch, int fg, int bg);
 /* Input Defines */
 // input.c commands
 void handleInput(int input, Tile** map);
-
-/* Hash Table Defines*/
-typedef struct Entry { /* table entry: */
-    char *key;
-    char *value;
-    struct Entry *next; /* next entry in chain */
-} Entry;
-
-typedef struct {
-    Entry **entries;
-    unsigned tableSize;
-} HashTable;
-
-// hashtable.c commands
-HashTable *createHashtable(unsigned tableSize);
-Entry *lookup(char *key, HashTable hashTable);
-Entry *install(char *key, char *value, HashTable hashTable);
 
 /* Externs */
 extern const int MAP_HEIGHT;

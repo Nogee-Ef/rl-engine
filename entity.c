@@ -2,8 +2,8 @@
 
 Entity* createEntity(int x, int y, char ch, int fg, int bg) {
     Entity* newEntity = calloc(1, sizeof(Entity));
-    Position pos;
-    Renderable render;
+    PositionComponent pos;
+    RenderableComponent render;
     
     pos.x = x;
     pos.y = y;
