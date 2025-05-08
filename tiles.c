@@ -1,4 +1,4 @@
-#include "header.h"
+#include "main.h"
 
 Tile** createTilesMap() {
     Tile** tiles = calloc(MAP_HEIGHT, sizeof(Tile*));

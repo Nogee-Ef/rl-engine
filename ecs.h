@@ -1,5 +1,4 @@
-#include "header.h"
-#include <stdlib.h>
+#include "main.h"
 
 // typedef struct {
 //     int x;

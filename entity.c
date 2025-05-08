@@ -1,4 +1,4 @@
-#include "header.h"
+#include "main.h"
 
 Entity* createEntity(int x, int y, char ch, int fg, int bg) {
     Entity* newEntity = calloc(1, sizeof(Entity));

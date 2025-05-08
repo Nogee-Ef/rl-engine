@@ -1,4 +1,4 @@
-#include "header.h"
+#include "main.h"
 
 void moveEntity(Tile** map, int dx, int dy) {
     // Check if the position is within the bounds of the map.

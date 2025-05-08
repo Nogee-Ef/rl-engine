@@ -1,4 +1,4 @@
-#include "header.h"
+#include "main.h"
 #include "ecs.h"
 
 const int MAP_HEIGHT = 25;
@@ -33,7 +33,7 @@ int main(void) {
 
     // Main game loop.
     int input;
-    while (input = _getch()) {
+    while ((input = getInput())) {
         if (input == 'q') break;
         handleInput(input, map);
 
