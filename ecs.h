@@ -1,28 +1,9 @@
 #include "main.h"
 
-// typedef struct {
-//     int x;
-//     int y;
-// } PositionComponent;
-
-// typedef struct {
-//     char ch;
-//     int fg;
-//     int bg;
-// } RenderableComponent;
-
 typedef struct {
     int x;
     int y;
 } Position;
-
-// typedef struct {
-//     int id;
-//     Position facing;
-//     Position netMomentum;
-//     int gear;
-//     int maxGear;
-// } MomentumComponent;
 
 #define MAXENTITIES 100
 
@@ -82,15 +63,3 @@ void ecsRenderSystem(Registry registry) {
         );
     }
 }
-
-// void momentumSystem(Registry registry) {
-//     for (int i = 0; i < registry.momentumSize; i++) {
-//         // Increase net momentum in the direction the entity is facing.
-//         if (abs(registry.momentumComponents[i].netMomentum[0]) < registry.momentumComponents[i].gear){
-//             registry.momentumComponents[i].netMomentum[0] += registry.momentumComponents[i].facing[0];
-//         }
-//         if (abs(registry.momentumComponents[i].netMomentum[1]) < registry.momentumComponents[i].gear) {
-//             registry.momentumComponents[i].netMomentum[1] += registry.momentumComponents[i].facing[1];
-//         }
-//     }
-// }
