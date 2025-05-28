@@ -38,8 +38,8 @@ void ecsAddRenderable(Registry registry, int entityID, char ch, int fg, int bg) 
 
 void ecsRenderSystem(Registry registry) {
     // At some point it may be advantageous to check which set has fewer entries and iterate through that.
-    // For now it's same to assume that the # of renderable components will be the same size or smaller than the number of position components.
-    for (int i = 0; i < registry.renderSize; i++) {
+    // For now the # of position and renderable components will always be the same, so we can iterate through the position components instead.
+    for (int i = 0; i < registry.posSize; i++) {
         drawAt(
             registry.posComponents[i].x, registry.posComponents[i].y, 
             registry.renderComponents[registry.renderIndex[registry.posComponents[i].id]].fg, 
