@@ -46,15 +46,3 @@ void ecsRenderSystem(Registry registry) {
         );
     }
 }
-
-// void momentumSystem(Registry registry) {
-//     for (int i = 0; i < registry.momentumSize; i++) {
-//         // Increase net momentum in the direction the entity is facing.
-//         if (abs(registry.momentumComponents[i].netMomentum[0]) < registry.momentumComponents[i].gear){
-//             registry.momentumComponents[i].netMomentum[0] += registry.momentumComponents[i].facing[0];
-//         }
-//         if (abs(registry.momentumComponents[i].netMomentum[1]) < registry.momentumComponents[i].gear) {
-//             registry.momentumComponents[i].netMomentum[1] += registry.momentumComponents[i].facing[1];
-//         }
-//     }
-// }
