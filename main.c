@@ -21,7 +21,7 @@ int main(void) {
 
     drawAt(world.posComponents[world.posIndex[playerID]].x,
         world.posComponents[world.posIndex[playerID]].y,
-        // It seems like the player's renderComponent is not being correctly retrieved.
+        // It seems like the player's renderComponent is not being correctly retrieved. For debugging, I've replaced the code to retrieve that data with the expected values.
         WHITE, //world.renderComponents[world.renderIndex[playerID]].fg,
         BLACK, // world.renderComponents[world.renderIndex[playerID]].bg,
         '@'); //world.renderComponents[world.renderIndex[playerID]].ch);
