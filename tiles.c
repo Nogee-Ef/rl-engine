@@ -88,7 +88,12 @@ void generateFloor(Tile** map, int maxRooms) {
         }
     }
 
-    player = createEntity(rooms[0].x + (int)(rooms[0].width / 2), rooms[0].y + (int)(rooms[0].height / 2), '@', WHITE, BLACK);
+    playerID = ecsInitEntity(world);
+    ecsAddPosition(world, playerID, rooms[0].x + (int)(rooms[0].width / 2), rooms[0].y + (int)(rooms[0].height / 2));
+    ecsAddRenderable(world, playerID, WHITE, BLACK, '@');
+
+
+    //player = createEntity(rooms[0].x + (int)(rooms[0].width / 2), rooms[0].y + (int)(rooms[0].height / 2), '@', WHITE, BLACK);
 
     free(rooms);
 }

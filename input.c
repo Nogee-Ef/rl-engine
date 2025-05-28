@@ -2,12 +2,13 @@
 
 void moveEntity(Tile** map, int dx, int dy) {
     // Check if the position is within the bounds of the map.
-    if (player->position.x + dx > 0 && player->position.x + dx < MAP_WIDTH && player->position.y + dy > 0 && player->position.y + dy < MAP_HEIGHT) {
+    if (world.posComponents[world.posIndex[playerID]].x + dx > 0 && world.posComponents[world.posIndex[playerID]].x + dx < MAP_WIDTH 
+        && world.posComponents[world.posIndex[playerID]].y + dy > 0 && world.posComponents[world.posIndex[playerID]].y + dy < MAP_HEIGHT) {
         // Check if the position is on a walkable tile
-        if (map[player->position.y + dy][player->position.x + dx].walkable) {
+        if (map[world.posComponents[world.posIndex[playerID]].y + dy][world.posComponents[world.posIndex[playerID]].y + dx].walkable) {
             // Move the entity
-            player->position.x = player->position.x + dx;
-            player->position.y = player->position.y + dy;
+            world.posComponents[world.posIndex[playerID]].x += dx;
+            world.posComponents[world.posIndex[playerID]].y += dy;
         }
     }
 }

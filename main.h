@@ -42,7 +42,9 @@ void generateFloor(Tile** map, int maxRooms);
 void drawAt(int x, int y, int fg, int bg, char toPrint);
 void drawTileMap(Tile** map);
 
-/* Entity */
+/* ECS */
+#define MAXENTITIES 100
+
 typedef struct {
     int id;
     int x;
@@ -57,15 +59,33 @@ typedef struct {
 } RenderableComponent;
 
 typedef struct {
-    PositionComponent position;
-    RenderableComponent renderable;
-} Entity;
+    int entityCount;
+    PositionComponent *posComponents;
+    int *posIndex;
+    int posSize;
+    RenderableComponent *renderComponents;
+    int *renderIndex;
+    int renderSize;
+} Registry;
 
-typedef struct {
-    int walkable;
-} Movement;
+// typedef struct {
+//     int x;
+//     int y;
+// } Position;
 
-Entity* createEntity(int x, int y, char ch, int fg, int bg);
+// typedef struct {
+//     int id;
+//     Position facing;
+//     Position netMomentum;
+//     int gear;
+//     int maxGear;
+// } MomentumComponent;
+
+Registry ecsInitWorld(void);
+int ecsInitEntity(Registry registry);
+void ecsAddPosition(Registry registry, int entityID, int x, int y);
+void ecsAddRenderable(Registry registry, int entityID, char ch, int fg, int bg);
+void ecsRenderSystem(Registry registry);
 
 /* Input */
 void handleInput(int input, Tile** map);
@@ -73,6 +93,7 @@ void handleInput(int input, Tile** map);
 /* Externs */
 extern const int MAP_HEIGHT;
 extern const int MAP_WIDTH;
-extern Entity* player;
+extern int playerID;
+extern Registry world;
 
 #endif
