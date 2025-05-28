@@ -68,19 +68,6 @@ typedef struct {
     int renderSize;
 } Registry;
 
-// typedef struct {
-//     int x;
-//     int y;
-// } Position;
-
-// typedef struct {
-//     int id;
-//     Position facing;
-//     Position netMomentum;
-//     int gear;
-//     int maxGear;
-// } MomentumComponent;
-
 Registry ecsInitWorld(void);
 int ecsInitEntity(Registry registry);
 void ecsAddPosition(Registry registry, int entityID, int x, int y);
