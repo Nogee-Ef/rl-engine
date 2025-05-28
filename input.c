@@ -14,6 +14,7 @@ void moveEntity(Tile** map, int dx, int dy) {
 }
 
 void handleInput(int input, Tile** map) {
+    // It make make sense to clean this up with a table containing the (x, y) values associated with each input integer. Something like this:
     /*
     Position coordList[10] = { [-1, 1], };
     if (input > 48 && input < 57) {
