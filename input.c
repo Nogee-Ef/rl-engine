@@ -1,5 +1,6 @@
 #include "main.h"
 
+// Currently untested.
 void moveEntity(Tile** map, int dx, int dy) {
     // Check if the position is within the bounds of the map.
     if (world.posComponents[world.posIndex[playerID]].x + dx > 0 && world.posComponents[world.posIndex[playerID]].x + dx < MAP_WIDTH 
