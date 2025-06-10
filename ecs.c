@@ -17,7 +17,7 @@ Registry ecsInitWorld(void) {
 // Returns the entity ID of the newly initialized entity
 int ecsInitEntity(Registry registry) {
     if (registry.entityCount < MAXENTITIES) {
-        return registry.entityCount++;
+        return ++registry.entityCount;
     }
     else return 0; // Error: maximum entity count exceeded.
 }
@@ -36,9 +36,9 @@ void ecsAddRenderable(Registry registry, int entityID, char ch, int fg, int bg) 
     registry.renderSize++;
 }
 
+
+// Currently unused.
 void ecsRenderSystem(Registry registry) {
-    // At some point it may be advantageous to check which set has fewer entries and iterate through that.
-    // For now the # of position and renderable components will always be the same, so we can iterate through the position components instead.
     for (int i = 0; i < registry.posSize; i++) {
         drawAt(
             registry.posComponents[i].x, registry.posComponents[i].y, 
