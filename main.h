@@ -69,10 +69,10 @@ typedef struct {
     int renderSize;
 } Registry;
 
-// typedef struct {
-//     int x;
-//     int y;
-// } Position;
+typedef struct {
+    int x;
+    int y;
+} Position;
 
 Registry* ecsInitWorld(void);
 void ecsFreeWorld(Registry* registry);

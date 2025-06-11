@@ -22,9 +22,9 @@ int main(void) {
     drawAt(
         world->posComponents[world->posIndex[playerID]].x,
         world->posComponents[world->posIndex[playerID]].y,
-        WHITE, //world->renderComponents[world->renderIndex[playerID]].fg,
-        BLACK, //world->renderComponents[world->renderIndex[playerID]].bg,
-        '@' //world->renderComponents[world->renderIndex[playerID]].ch
+        world->renderComponents[world->renderIndex[playerID]].fg,
+        world->renderComponents[world->renderIndex[playerID]].bg,
+        world->renderComponents[world->renderIndex[playerID]].ch
     );
 
     // Main game loop.
@@ -37,9 +37,9 @@ int main(void) {
         drawAt(
             world->posComponents[world->posIndex[playerID]].x,
             world->posComponents[world->posIndex[playerID]].y, 
-            WHITE, //world->renderComponents[world->renderIndex[playerID]].fg,
-            BLACK, //world->renderComponents[world->renderIndex[playerID]].bg,
-            '@' //world->renderComponents[world->renderIndex[playerID]].ch
+            world->renderComponents[world->renderIndex[playerID]].fg,
+            world->renderComponents[world->renderIndex[playerID]].bg,
+            world->renderComponents[world->renderIndex[playerID]].ch
         );
     }
 
