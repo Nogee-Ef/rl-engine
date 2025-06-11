@@ -15,6 +15,14 @@ Registry* ecsInitWorld(void) {
     return newWorld;
 }
 
+void ecsFreeWorld(Registry* registry) {
+    free(registry->posComponents);
+    free(registry->posIndex);
+    free(registry->renderComponents);
+    free(registry->renderIndex);
+    free(registry);
+}
+
 // Returns the entity ID of the newly initialized entity
 int ecsInitEntity(Registry* registry) {
     if (registry->entityCount < MAXENTITIES) {

@@ -75,6 +75,7 @@ typedef struct {
 // } Position;
 
 Registry* ecsInitWorld(void);
+void ecsFreeWorld(Registry* registry);
 int ecsInitEntity(Registry* registry);
 void ecsAddPosition(Registry* registry, int entityID, int x, int y);
 void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg);

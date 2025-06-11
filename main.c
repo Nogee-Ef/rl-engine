@@ -45,6 +45,7 @@ int main(void) {
 
     // Cleanup and Exit.
     freeMap(map);
+    ecsFreeWorld(world);
     printf(SHOW);
     printf(CLEAR);
 
