@@ -76,7 +76,7 @@ void generateFloor(Tile** map, int maxRooms) {
     int y, x, height, width;
     Room* rooms = calloc(maxRooms, sizeof(Room));
     for (int n = 0; n < maxRooms; n++) {
-        y = (rand() % (MAP_HEIGHT -10)) + 1;
+        y = (rand() % (MAP_HEIGHT - 10)) + 1;
         x = (rand() % (MAP_WIDTH - 20)) + 1;
         height = (rand() % 7) + 3;
         width = (rand() % 15) + 5;

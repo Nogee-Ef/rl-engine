@@ -1,21 +1,19 @@
 #include "main.h"
 
-// Currently untested.
 void moveEntity(Tile** map, int dx, int dy) {
-    // Check if the position is within the bounds of the map.
-    if (world.posComponents[world.posIndex[playerID]].x + dx > 0 && world.posComponents[world.posIndex[playerID]].x + dx < MAP_WIDTH 
-        && world.posComponents[world.posIndex[playerID]].y + dy > 0 && world.posComponents[world.posIndex[playerID]].y + dy < MAP_HEIGHT) {
-        // Check if the position is on a walkable tile
-        if (map[world.posComponents[world.posIndex[playerID]].y + dy][world.posComponents[world.posIndex[playerID]].y + dx].walkable) {
-            // Move the entity
-            world.posComponents[world.posIndex[playerID]].x += dx;
-            world.posComponents[world.posIndex[playerID]].y += dy;
-        }
-    }
+    // // Check if the position is within the bounds of the map.
+    // if (world.posComponents[world.posIndex[playerID]].x + dx > 0 && world.posComponents[world.posIndex[playerID]].x + dx < MAP_WIDTH 
+    //     && world.posComponents[world.posIndex[playerID]].y + dy > 0 && world.posComponents[world.posIndex[playerID]].y + dy < MAP_HEIGHT) {
+    //     // Check if the position is on a walkable tile
+    //     if (map[world.posComponents[world.posIndex[playerID]].y + dy][world.posComponents[world.posIndex[playerID]].y + dx].walkable) {
+    //         // Move the entity
+    //         world.posComponents[world.posIndex[playerID]].x += dx;
+    //         world.posComponents[world.posIndex[playerID]].y += dy;
+    //     }
+    // }
 }
 
 void handleInput(int input, Tile** map) {
-    // It make make sense to clean this up with a table containing the (x, y) values associated with each input integer. Something like this:
     /*
     Position coordList[10] = { [-1, 1], };
     if (input > 48 && input < 57) {

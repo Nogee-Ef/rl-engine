@@ -27,12 +27,12 @@ void freeMap(Tile** map);
 void generateFloor(Tile** map, int maxRooms);
 
 /* Display */
-#define CLEAR "\x1B[2J\x1b[3J" // Clears the terminal AND the scroll back.
-#define HIDE "\x1B[?25l" // Hides the cursor.
+#define CLEAR "\x1b[2J\x1b[3J" // Clears the terminal AND the scroll back.
+#define HIDE "\x1b[?25l" // Hides the cursor.
 #define SHOW "\x1b[?25h" // Shows the cursor.
 
 // Colors
-#define RESET "\x1B[0m" // Resets color to its default value.
+#define RESET "\x1b[0m" // Resets color to its default value.
 
 #define BLACK 30
 #define RED 31
@@ -69,10 +69,15 @@ typedef struct {
     int renderSize;
 } Registry;
 
-Registry ecsInitWorld(void);
-int ecsInitEntity(Registry registry);
-void ecsAddPosition(Registry registry, int entityID, int x, int y);
-void ecsAddRenderable(Registry registry, int entityID, char ch, int fg, int bg);
+// typedef struct {
+//     int x;
+//     int y;
+// } Position;
+
+Registry* ecsInitWorld(void);
+int ecsInitEntity(Registry* registry);
+void ecsAddPosition(Registry* registry, int entityID, int x, int y);
+void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg);
 // void ecsRenderSystem(Registry registry);
 
 /* Input */
@@ -82,6 +87,6 @@ void handleInput(int input, Tile** map);
 extern const int MAP_HEIGHT;
 extern const int MAP_WIDTH;
 extern int playerID;
-extern Registry world;
+extern Registry* world;
 
 #endif
