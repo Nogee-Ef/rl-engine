@@ -17,15 +17,17 @@ int main(void) {
     // Set up the Tile Map.
     map = createTilesMap();
     generateFloor(map, 5); // generateFloor handles initializing the player.
-  
+
+    // Test entity.
+    int npc = ecsInitEntity(world);
+    ecsAddPosition(world, npc, 30, 15);
+    ecsAddRenderable(world, npc, '@', BRIGHT(YELLOW), BLACK);
+    
     drawTileMap(map); // Draw the initial map so the screen doesn't appear blank before the first input.
-    drawAt(
-        world->posComponents[world->posIndex[playerID]].x,
-        world->posComponents[world->posIndex[playerID]].y,
-        world->renderComponents[world->renderIndex[playerID]].fg,
-        world->renderComponents[world->renderIndex[playerID]].bg,
-        world->renderComponents[world->renderIndex[playerID]].ch
-    );
+    ecsRenderSystem(world);
+
+    pushMessage("Thanks for playing!", BRIGHT(BLUE));
+    displayMessageLog();
 
     // Main game loop.
     int input;
@@ -35,13 +37,8 @@ int main(void) {
         handleInput(input, map);
 
         drawTileMap(map);
-        drawAt(
-            world->posComponents[world->posIndex[playerID]].x,
-            world->posComponents[world->posIndex[playerID]].y, 
-            world->renderComponents[world->renderIndex[playerID]].fg,
-            world->renderComponents[world->renderIndex[playerID]].bg,
-            world->renderComponents[world->renderIndex[playerID]].ch
-        );
+        ecsRenderSystem(world);
+        displayMessageLog();
     }
 
     // Cleanup and Exit.

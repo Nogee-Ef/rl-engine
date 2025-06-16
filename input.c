@@ -1,17 +1,28 @@
 #include "main.h"
 
-void moveEntity(Tile** map, int dx, int dy) {
-    
+/* TODO use some early returns to un-nest this mess. */
+void moveEntity(Tile** map, int dx, int dy, int entityID) {
     // Check if the position is within the bounds of the map.
     if (
-        world->posComponents[world->posIndex[playerID]].x + dx > 0 && world->posComponents[world->posIndex[playerID]].x + dx < MAP_WIDTH && 
-        world->posComponents[world->posIndex[playerID]].y + dy > 0 && world->posComponents[world->posIndex[playerID]].y + dy < MAP_HEIGHT
+        world->posComponents[world->posIndex[entityID]].x + dx > 0 && world->posComponents[world->posIndex[entityID]].x + dx < MAP_WIDTH && 
+        world->posComponents[world->posIndex[entityID]].y + dy > 0 && world->posComponents[world->posIndex[entityID]].y + dy < MAP_HEIGHT
     ) {
         // Check if the goal position is on a walkable tile
-        if (map[world->posComponents[world->posIndex[playerID]].y + dy][world->posComponents[world->posIndex[playerID]].x + dx].walkable) {
+        if (map[world->posComponents[world->posIndex[entityID]].y + dy][world->posComponents[world->posIndex[entityID]].x + dx].walkable) {
+            // Check if there is another entity occupying this position
+            for (int i = 0; i < world->posSize; i++) {
+                if (
+                    world->posComponents[i].id != entityID && // The entity can't bump into itself if it sits still.
+                    world->posComponents[i].y == world->posComponents[world->posIndex[entityID]].y + dy &&
+                    world->posComponents[i].x == world->posComponents[world->posIndex[entityID]].x + dx
+                ) {
+                    pushMessage("That tile is already occupied.", WHITE);
+                    return;
+                }
+            }
             // Move the entity
-            world->posComponents[world->posIndex[playerID]].x += dx;
-            world->posComponents[world->posIndex[playerID]].y += dy;
+            world->posComponents[world->posIndex[entityID]].x += dx;
+            world->posComponents[world->posIndex[entityID]].y += dy;
         }
     }
 }
@@ -30,7 +41,7 @@ static int coordList[10][2] = {
 
 void handleInput(int input, Tile** map) {
     if (input > 48 && input < 57) {
-        moveEntity(map, coordList[input-49][0], coordList[input-49][1]);
+        moveEntity(map, coordList[input-49][0], coordList[input-49][1], playerID);
     }
     //     case 75: // Arrow Left
     //         moveEntity(map, -1, 0);

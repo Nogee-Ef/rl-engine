@@ -38,10 +38,21 @@ void generateFloor(Tile** map, int maxRooms);
 #define RED 31
 #define GREEN 32
 #define YELLOW 33
+#define BLUE 34
 #define WHITE 37
 
+#define BRIGHT(a) (a+60)
+
+typedef struct {
+    char text[100];
+    int fg;
+} Message;
+
 void drawAt(int x, int y, int fg, int bg, char toPrint);
+void drawString(int x, int y, int fg, int bg, char string[100]);
 void drawTileMap(Tile** map);
+void pushMessage(char message[100], int fg);
+void displayMessageLog(void);
 
 /* ECS */
 #define MAXENTITIES 100
@@ -74,7 +85,7 @@ void ecsFreeWorld(Registry* registry);
 int ecsInitEntity(Registry* registry);
 void ecsAddPosition(Registry* registry, int entityID, int x, int y);
 void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg);
-// void ecsRenderSystem(Registry registry);
+void ecsRenderSystem(Registry* registry);
 
 /* Input */
 void handleInput(int input, Tile** map);
