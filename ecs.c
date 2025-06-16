@@ -29,8 +29,9 @@ int ecsInitEntity(Registry* registry) {
         return ++registry->entityCount;
     }
     else {
+        // Error: maximum entity count exceeded.
         return 0;
-    }  // Error: maximum entity count exceeded.
+    }
 }
 
 void ecsAddPosition(Registry* registry, int entityID, int x, int y) {
@@ -43,4 +44,19 @@ void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg)
     registry->renderComponents[registry->renderSize] = (RenderableComponent){ .id = entityID, .ch = ch, .fg = fg, .bg = bg };
     registry->renderIndex[entityID] = registry->renderSize;
     registry->renderSize++;
+}
+
+void ecsRenderSystem(Registry* registry) {
+    /* 
+    At some point it may be advantageous to check which set has fewer entries and iterate through that?
+    For now it can be assumed that the Position and Renderable lists are the same size.
+    */
+    for (int i = 0; i < registry->posSize; i++) {
+        drawAt(
+            registry->posComponents[i].x, registry->posComponents[i].y, 
+            registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].fg, 
+            registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].bg, 
+            registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].ch
+        );
+    }
 }
