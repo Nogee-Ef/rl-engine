@@ -29,7 +29,8 @@ int main(void) {
 
     // Main game loop.
     int input;
-    while ((input = getInput())) {
+    while (TRUE) {
+        input = getInput();
         if (input == 'q') break;
         handleInput(input, map);
 
