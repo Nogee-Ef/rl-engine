@@ -41,13 +41,17 @@ static int coordList[10][2] = {
     { 1, -1}, // NUMPAD Up Right
 };
 
-void handleInput(int input, Tile** map) {
+int handleInput(int input, Tile** map) {
     if (input == 'q') {
         running = FALSE;
+        return 1;
     }
     else if (input > 48 && input < 57) {
         moveEntity(map, coordList[input-49][0], coordList[input-49][1], playerID);
+        return 1;
     }
+
+    return 0;
     //     case 75: // Arrow Left
     //         moveEntity(map, -1, 0);
     //         break;

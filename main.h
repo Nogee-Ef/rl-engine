@@ -85,7 +85,7 @@ void ecsRenderSystem(Registry* registry);
 void ecsTurnSystem(Registry* registry, Tile** map);
 
 /* Input */
-void handleInput(int input, Tile** map);
+int handleInput(int input, Tile** map);
 void moveEntity(Tile** map, int dx, int dy, int entityID);
 
 /* Externs */

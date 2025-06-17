@@ -67,7 +67,7 @@ void ecsTurnSystem(Registry* registry, Tile** map) {
             moveEntity(map, 0, -1, registry->posComponents[i].id);
         }
         else {
-            handleInput(getInput(), map);
+            while(!handleInput(getInput(), map));
         }
     }
 }
