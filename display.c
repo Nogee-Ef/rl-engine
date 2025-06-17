@@ -19,6 +19,11 @@ void drawTileMap(Tile** map) {
     }
 }
 
+typedef struct {
+    char text[100];
+    int fg;
+} Message;
+
 static Message messageLog[80];
 static int numMessages = 0;
 
