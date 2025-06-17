@@ -6,6 +6,7 @@ const int MAP_WIDTH = 100;
 Tile** map;
 int playerID;
 Registry* world;
+int running;
 
 int main(void) {
     // Display setup functions.
@@ -30,12 +31,11 @@ int main(void) {
     displayMessageLog();
 
     // Main game loop.
-    int input;
-    while (TRUE) {
-        input = getInput();
-        if (input == 'q') break;
-        handleInput(input, map);
+    running = TRUE;
+    while (running) {
+        ecsTurnSystem(world, map);
 
+        // Render functions.
         drawTileMap(map);
         ecsRenderSystem(world);
         displayMessageLog();
@@ -46,6 +46,7 @@ int main(void) {
     ecsFreeWorld(world);
     printf(SHOW);
     printf(CLEAR);
+    onExit();
 
     return 0;
 }

@@ -16,7 +16,9 @@ void moveEntity(Tile** map, int dx, int dy, int entityID) {
                     world->posComponents[i].y == world->posComponents[world->posIndex[entityID]].y + dy &&
                     world->posComponents[i].x == world->posComponents[world->posIndex[entityID]].x + dx
                 ) {
-                    pushMessage("That tile is already occupied.", WHITE);
+                    char toPrint[100];
+                    sprintf(toPrint, "Entity %d bumps into entity %d", entityID, world->posComponents[i].id);
+                    pushMessage(toPrint, WHITE);
                     return;
                 }
             }
@@ -40,7 +42,10 @@ static int coordList[10][2] = {
 };
 
 void handleInput(int input, Tile** map) {
-    if (input > 48 && input < 57) {
+    if (input == 'q') {
+        running = FALSE;
+    }
+    else if (input > 48 && input < 57) {
         moveEntity(map, coordList[input-49][0], coordList[input-49][1], playerID);
     }
     //     case 75: // Arrow Left

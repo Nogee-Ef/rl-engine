@@ -9,6 +9,7 @@
 
 /* OS */
 void displaySetup(void);
+void onExit(void);
 void moveCursor(int x, int y);
 int getInput(void);
 
@@ -42,11 +43,6 @@ void generateFloor(Tile** map, int maxRooms);
 #define WHITE 37
 
 #define BRIGHT(a) (a+60)
-
-typedef struct {
-    char text[100];
-    int fg;
-} Message;
 
 void drawAt(int x, int y, int fg, int bg, char toPrint);
 void drawString(int x, int y, int fg, int bg, char string[100]);
@@ -86,13 +82,16 @@ int ecsInitEntity(Registry* registry);
 void ecsAddPosition(Registry* registry, int entityID, int x, int y);
 void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg);
 void ecsRenderSystem(Registry* registry);
+void ecsTurnSystem(Registry* registry, Tile** map);
 
 /* Input */
 void handleInput(int input, Tile** map);
+void moveEntity(Tile** map, int dx, int dy, int entityID);
 
 /* Externs */
 extern const int MAP_HEIGHT;
 extern const int MAP_WIDTH;
+extern int running;
 extern int playerID;
 extern Registry* world;
 

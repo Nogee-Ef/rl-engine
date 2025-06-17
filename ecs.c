@@ -60,3 +60,14 @@ void ecsRenderSystem(Registry* registry) {
         );
     }
 }
+
+void ecsTurnSystem(Registry* registry, Tile** map) {
+    for (int i = 0; i < registry->posSize; i++) {
+        if (registry->posComponents[i].id != playerID) {
+            moveEntity(map, 0, -1, registry->posComponents[i].id);
+        }
+        else {
+            handleInput(getInput(), map);
+        }
+    }
+}
