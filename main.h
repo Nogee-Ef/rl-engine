@@ -7,6 +7,9 @@
 #define TRUE 1
 #define FALSE 0
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define SQUARE(a) ((a) * (a))
+
 /* OS */
 void displaySetup(void);
 void onExit(void);
@@ -87,6 +90,14 @@ void ecsTurnSystem(Registry* registry, Tile** map);
 /* Input */
 int handleInput(int input, Tile** map);
 void moveEntity(Tile** map, int dx, int dy, int entityID);
+
+/* A* */
+typedef struct {
+    int path[100][2]; // Max path length is 100
+    int pathLength;
+} Path;
+
+Path getPathTo(Tile** map, int startX, int startY, int goalX, int goalY);
 
 /* Externs */
 extern const int MAP_HEIGHT;

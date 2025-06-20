@@ -46,7 +46,7 @@ int handleInput(int input, Tile** map) {
         running = FALSE;
         return 1;
     }
-    else if (input > 48 && input < 57) {
+    else if (input > 48 && input < 58) {
         moveEntity(map, coordList[input-49][0], coordList[input-49][1], playerID);
         return 1;
     }

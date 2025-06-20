@@ -64,7 +64,19 @@ void ecsRenderSystem(Registry* registry) {
 void ecsTurnSystem(Registry* registry, Tile** map) {
     for (int i = 0; i < registry->posSize; i++) {
         if (registry->posComponents[i].id != playerID) {
-            moveEntity(map, 0, -1, registry->posComponents[i].id);
+            Path aiPath = getPathTo(
+                map, 
+                registry->posComponents[i].x, 
+                registry->posComponents[i].y, 
+                registry->posComponents[registry->posIndex[playerID]].x, 
+                registry->posComponents[registry->posIndex[playerID]].y
+            );
+            moveEntity(
+                map,
+                aiPath.path[aiPath.pathLength - 1][0] - registry->posComponents[i].x, 
+                aiPath.path[aiPath.pathLength - 1][1] - registry->posComponents[i].y, 
+                registry->posComponents[i].id
+            );
         }
         else {
             while(!handleInput(getInput(), map));
