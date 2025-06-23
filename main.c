@@ -30,20 +30,26 @@ int main(void) {
     pushMessage("Thanks for playing!", BRIGHT(BLUE));
     displayMessageLog();
 
+    //printDisplayBuffer();
+    //drawFrame(0, 0, MAP_WIDTH + 1, MAP_HEIGHT + 1);
+
     // Main game loop.
     running = TRUE;
     while (running) {
         ecsTurnSystem(world, map);
 
         // Render functions.
-        drawTileMap(map);
-        ecsRenderSystem(world);
-        displayMessageLog();
+        //drawTileMap(map);
+        //ecsRenderSystem(world);
+        //displayMessageLog();
+        //printDisplayBuffer();
+        //drawFrame(0, 0, MAP_WIDTH + 1, MAP_HEIGHT + 1);
     }
 
     // Cleanup and Exit.
     freeMap(map);
     ecsFreeWorld(world);
+    
     printf(SHOW);
     printf(CLEAR);
     onExit();

@@ -117,27 +117,28 @@ Path getPathTo(Tile** map, int startX, int startY, int goalX, int goalY) {
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 // Check if that successor would be in-bounds
-                if (MAP_WIDTH > currentNode.x + i && currentNode.x + i > 0 && MAP_HEIGHT > currentNode.y + j && currentNode.y + j > 0) {
-                    // Check if the successor would be a walkable tile
-                    if (!map[currentNode.y + j][currentNode.x + i].walkable) {
-                        continue;
-                    }
-                    float stepCost = currentNode.costInSteps + 1; // Eventually you could "weight" the step cost for obstructed tiles.
-                    if ((i == -1 && j == -1) || (i == -1 && j == 1) || (i == 1 && j == -1) || (i == 1 && j == 1)) {
-                        stepCost += 0.4; //Approximating the root-2 cost of moving diagonally
-                    }
-                    float heuristicCost = sqrtf((float)(SQUARE((currentNode.x + i) - goalX)) + (float)(SQUARE((currentNode.y + j) - goalY)));
-                    float totalCost = stepCost + heuristicCost;
+                if (MAP_WIDTH < currentNode.x + i && currentNode.x + i < 0 && MAP_HEIGHT < currentNode.y + j && currentNode.y + j < 0) {
+                    continue;
+                }    
+                // Check if the successor would be a walkable tile
+                if (!map[currentNode.y + j][currentNode.x + i].walkable) {
+                    continue;
+                }
+                float stepCost = currentNode.costInSteps + 1; // Eventually you could "weight" the step cost for obstructed tiles.
+                if ((i == -1 && j == -1) || (i == -1 && j == 1) || (i == 1 && j == -1) || (i == 1 && j == 1)) {
+                    stepCost += 0.4; //Approximating the root-2 cost of moving diagonally
+                }
+                float heuristicCost = sqrtf((float)(SQUARE((currentNode.x + i) - goalX)) + (float)(SQUARE((currentNode.y + j) - goalY)));
+                float totalCost = stepCost + heuristicCost;
 
-                    // If this node has a lower cost than a node already in the list, add it. Otherwise, skip it.
-                    if (totalCost < openList[currentNode.y + j][currentNode.x + i].sumCost) {
-                        Node successorNode = { 
-                            .parentX = currentNode.x, .parentY = currentNode.y, .x = currentNode.x + i,
-                            .y = currentNode.y + j, .costInSteps = stepCost, .sumCost = totalCost
-                        };
-                        openList[currentNode.y + j][currentNode.x + i] = successorNode;
-                        enqueue(&pq, successorNode);
-                    }
+                // If this node has a lower cost than a node already in the list at the same position, add it. Otherwise, skip it.
+                if (totalCost < openList[currentNode.y + j][currentNode.x + i].sumCost) {
+                    Node successorNode = { 
+                        .parentX = currentNode.x, .parentY = currentNode.y, .x = currentNode.x + i,
+                        .y = currentNode.y + j, .costInSteps = stepCost, .sumCost = totalCost
+                    };
+                    openList[currentNode.y + j][currentNode.x + i] = successorNode;
+                    enqueue(&pq, successorNode);
                 }
             }
         }

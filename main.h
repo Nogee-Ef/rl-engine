@@ -7,7 +7,6 @@
 #define TRUE 1
 #define FALSE 0
 
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define SQUARE(a) ((a) * (a))
 
 /* OS */
@@ -47,8 +46,12 @@ void generateFloor(Tile** map, int maxRooms);
 
 #define BRIGHT(a) (a+60)
 
+void initDisplayBuffer(void);
+void freeDisplayBuffer(void);
+void printDisplayBuffer(void);
 void drawAt(int x, int y, int fg, int bg, char toPrint);
 void drawString(int x, int y, int fg, int bg, char string[100]);
+//void drawFrame(int originX, int originY, int width, int height);
 void drawTileMap(Tile** map);
 void pushMessage(char message[100], int fg);
 void displayMessageLog(void);
