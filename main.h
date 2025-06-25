@@ -49,10 +49,11 @@ void generateFloor(Tile** map, int maxRooms);
 void initDisplayBuffer(void);
 void freeDisplayBuffer(void);
 void printDisplayBuffer(void);
-void drawAt(int x, int y, int fg, int bg, char toPrint);
+void renderAt(int x, int y, int fg, int bg, char toPrint[4]);
+void renderFrame(int originX, int originY, int width, int height);
+void renderTileMap(Tile** map);
+void drawAt(int x, int y, int fg, int bg, char toPrint[4]);
 void drawString(int x, int y, int fg, int bg, char string[100]);
-//void drawFrame(int originX, int originY, int width, int height);
-void drawTileMap(Tile** map);
 void pushMessage(char message[100], int fg);
 void displayMessageLog(void);
 
@@ -92,7 +93,7 @@ void ecsTurnSystem(Registry* registry, Tile** map);
 
 /* Input */
 int handleInput(int input, Tile** map);
-void moveEntity(Tile** map, int dx, int dy, int entityID);
+int moveEntity(Tile** map, int dx, int dy, int entityID);
 
 /* A* */
 typedef struct {

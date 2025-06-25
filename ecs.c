@@ -35,9 +35,9 @@ int ecsInitEntity(Registry* registry) {
 }
 
 void ecsAddPosition(Registry* registry, int entityID, int x, int y) {
-    registry->posComponents[registry->posSize] = (PositionComponent){ .id = entityID, .x = x, .y = y }; // Add the new component to the end of the dense array.
-    registry->posIndex[entityID] = registry->posSize; // Add the new component's position in the dense array to the index array.
-    registry->posSize++; // Increase the recorded size of the dense array.
+    registry->posComponents[registry->posSize] = (PositionComponent){ .id = entityID, .x = x, .y = y };
+    registry->posIndex[entityID] = registry->posSize;
+    registry->posSize++;
 }
 
 void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg) {
@@ -52,11 +52,11 @@ void ecsRenderSystem(Registry* registry) {
     For now it can be assumed that the Position and Renderable lists are the same size.
     */
     for (int i = 0; i < registry->posSize; i++) {
-        drawAt(
+        renderAt(
             registry->posComponents[i].x, registry->posComponents[i].y, 
             registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].fg, 
             registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].bg, 
-            registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].ch
+            &registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].ch
         );
     }
 }

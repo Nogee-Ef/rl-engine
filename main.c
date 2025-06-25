@@ -20,18 +20,20 @@ int main(void) {
     generateFloor(map, 5); // generateFloor handles initializing the player.
 
     // Test entity.
-    int npc = ecsInitEntity(world);
-    ecsAddPosition(world, npc, 30, 15);
-    ecsAddRenderable(world, npc, '@', BRIGHT(YELLOW), BLACK);
+    int npcID = ecsInitEntity(world);
+    ecsAddPosition(world, npcID, 30, 15);
+    ecsAddRenderable(world, npcID, '@', BRIGHT(YELLOW), BLACK);
     
-    drawTileMap(map); // Draw the initial map so the screen doesn't appear blank before the first input.
+    renderTileMap(map); // Draw the initial map so the screen doesn't appear blank before the first input.
     ecsRenderSystem(world);
 
     pushMessage("Thanks for playing!", BRIGHT(BLUE));
     displayMessageLog();
 
-    //printDisplayBuffer();
-    //drawFrame(0, 0, MAP_WIDTH + 1, MAP_HEIGHT + 1);
+    renderFrame(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    renderFrame(0, MAP_HEIGHT + 1, MAP_WIDTH, 4);
+    printDisplayBuffer();
+    
 
     // Main game loop.
     running = TRUE;
@@ -39,11 +41,11 @@ int main(void) {
         ecsTurnSystem(world, map);
 
         // Render functions.
-        //drawTileMap(map);
-        //ecsRenderSystem(world);
-        //displayMessageLog();
-        //printDisplayBuffer();
-        //drawFrame(0, 0, MAP_WIDTH + 1, MAP_HEIGHT + 1);
+        renderTileMap(map);
+        ecsRenderSystem(world);
+        displayMessageLog();
+        renderFrame(0, 0, MAP_WIDTH, MAP_HEIGHT);
+        printDisplayBuffer();
     }
 
     // Cleanup and Exit.

@@ -2,18 +2,18 @@
 #include <string.h>
 
 typedef struct {
-    char ch;
+    char ch[4];
     int fg;
     int bg;
 } Glyph;
 
 static Glyph** displayBuffer;
 void initDisplayBuffer(void) {
-    displayBuffer = calloc(MAP_HEIGHT, sizeof(Glyph*));
-    for (int y = 0; y < MAP_HEIGHT; y ++) {
-        displayBuffer[y] = calloc(MAP_WIDTH, sizeof(Glyph));
-        for (int x = 0; x < MAP_WIDTH; x++) {
-                displayBuffer[y][x].ch = ' ';
+    displayBuffer = calloc(MAP_HEIGHT+1, sizeof(Glyph*));
+    for (int y = 0; y < MAP_HEIGHT+1; y ++) {
+        displayBuffer[y] = calloc(MAP_WIDTH+1, sizeof(Glyph));
+        for (int x = 0; x < MAP_WIDTH+1; x++) {
+                strcpy(displayBuffer[y][x].ch, " ");
                 displayBuffer[y][x].fg = WHITE;
                 displayBuffer[y][x].bg = BLACK;
         }
@@ -21,7 +21,7 @@ void initDisplayBuffer(void) {
 }
 
 void freeDisplayBuffer(void) {
-    for (int y = 0; y < MAP_HEIGHT; y++)
+    for (int y = 0; y < MAP_HEIGHT+1; y++)
     {
         free(displayBuffer[y]);
     }
@@ -30,49 +30,54 @@ void freeDisplayBuffer(void) {
 
 void printDisplayBuffer(void) {
     moveCursor(0,0);
-    for (int y = 0; y < MAP_HEIGHT; y++)
+    for (int y = 0; y < MAP_HEIGHT+1; y++)
     {
-        for (int x = 0; x < MAP_WIDTH; x++) {
-            printf("\x1b[%dm\x1b[%dm%c",displayBuffer[y][x].fg, displayBuffer[y][x].bg + 10, displayBuffer[y][x].ch);
+        for (int x = 0; x < MAP_WIDTH+1; x++) {
+            printf("\x1b[%dm\x1b[%dm%s",displayBuffer[y][x].fg, displayBuffer[y][x].bg + 10, displayBuffer[y][x].ch);
         }
         printf("\n");
     }
 }
 
-void drawAt(int x, int y, int fg, int bg, char toPrint) {
+void renderAt(int x, int y, int fg, int bg, char toPrint[4]) {
+    if (y > -1 && y < MAP_HEIGHT+1 && x > -1 && x < MAP_WIDTH+1) {
+                strcpy(displayBuffer[y][x].ch, toPrint);
+                displayBuffer[y][x].fg = fg;
+                displayBuffer[y][x].bg = bg;
+    }
+}
+
+void renderFrame(int originX, int originY, int width, int height) {
+    renderAt(originX, originY, WHITE, BLACK, "┌");
+    renderAt(originX + width, originY, WHITE, BLACK, "┐");
+    renderAt(originX, originY + height, WHITE, BLACK, "└");
+    renderAt(originX + width, originY + height, WHITE, BLACK, "┘");
+    for (int i = 1; i < width; i++) {
+        renderAt(originX + i, originY, WHITE, BLACK, "─");
+        renderAt(originX + i, originY + height, WHITE, BLACK, "─");
+    }
+    for (int n = 1; n < height; n++) {
+        renderAt(originX, originY + n, WHITE, BLACK, "│");
+        renderAt(originX + width, originY + n, WHITE, BLACK, "│");
+    }
+}
+
+void renderTileMap(Tile** map) {
+    for (int y = 0; y < MAP_HEIGHT; y ++) {
+        for (int x = 0; x < MAP_WIDTH; x++) {
+            renderAt(x, y, map[y][x].fg, map[y][x].bg, &map[y][x].ch);
+        }
+    }
+}
+
+void drawAt(int x, int y, int fg, int bg, char toPrint[4]) {
     moveCursor(x, y);
-    printf("\x1b[%dm\x1b[%dm%c%s", fg, bg + 10, toPrint, RESET);
-    // if (y > 0 && y < MAP_HEIGHT && x > 0 && x < MAP_WIDTH) {
-    //     displayBuffer[y][x] = (Glyph){.ch = toPrint, .fg = fg, .bg = bg};
-    // }
+    printf("\x1b[%dm\x1b[%dm%s%s", fg, bg + 10, toPrint, RESET);
 }
 
 void drawString(int x, int y, int fg, int bg, char string[100]) {
     moveCursor(x, y);
     printf("\x1b[%dm\x1b[%dm%s%s", fg, bg + 10, string, RESET);
-}
-
-// void drawFrame(int originX, int originY, int width, int height) {
-//     drawAt(originX, originY, WHITE, BLACK, "┌");
-//     drawAt(originX + width, originY, WHITE, BLACK, "┐");
-//     drawAt(originX, originY + height, WHITE, BLACK, "└");
-//     drawAt(originX + width, originY + height, WHITE, BLACK, "┘");
-//     for (int i = 1; i < width; i++) {
-//         drawAt(originX + i, originY, WHITE, BLACK, "─");
-//         drawAt(originX + i, originY + height, WHITE, BLACK, "─");
-//     }
-//     for (int n = 1; n < height; n++) {
-//         drawAt(originX, originY + n, WHITE, BLACK, "│");
-//         drawAt(originX + width, originY + n, WHITE, BLACK, "│");
-//     }
-// }
-
-void drawTileMap(Tile** map) {
-    for (int y = 0; y < MAP_HEIGHT; y ++) {
-        for (int x = 0; x < MAP_WIDTH; x++) {
-            drawAt(x, y, map[y][x].fg, map[y][x].bg, map[y][x].ch);
-        }
-    }
 }
 
 typedef struct {
@@ -94,7 +99,7 @@ void pushMessage(char message[100], int fg) {
 void displayMessageLog(void) {
     for (int i = numMessages; i > numMessages - 3; i--) {
         if (i > 0) {
-            drawString(0, 27 + i - numMessages, messageLog[i].fg, BLACK, messageLog[i].text);
+            drawString(0, 28 + i - numMessages, messageLog[i].fg, BLACK, messageLog[i].text);
         }
     }
 }

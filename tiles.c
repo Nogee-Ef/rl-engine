@@ -90,7 +90,7 @@ void generateFloor(Tile** map, int maxRooms) {
 
     playerID = ecsInitEntity(world);
     ecsAddPosition(world, playerID, rooms[0].x + (int)(rooms[0].width / 2), rooms[0].y + (int)(rooms[0].height / 2));
-    ecsAddRenderable(world, playerID, '@', WHITE, BLACK);
+    ecsAddRenderable(world, playerID, '@', BRIGHT(WHITE), BLACK);
 
     free(rooms);
 }
