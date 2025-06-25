@@ -18,7 +18,6 @@ typedef struct {
     int queueSize;
 } PriorityQueue;
 
-// Binary Heap / Priority Queue Functions
 void swapNode(Node* a, Node* b) {
     Node temp = *a;
     *a = *b;
@@ -34,7 +33,6 @@ void heapifyUp(PriorityQueue* queue, int index) {
 
 void enqueue(PriorityQueue* queue, Node newNode) {
     if (queue->queueSize == MAX_NODES) {
-        // Priority queue is full.
         return;
     }
 
@@ -63,7 +61,6 @@ void heapifyDown(PriorityQueue* queue, int index) {
 
 Node dequeue(PriorityQueue* queue) {
     // if (!queue->queueSize) {
-    //     // Priority queue is empty.
     //     return;
     // }
 
@@ -75,19 +72,15 @@ Node dequeue(PriorityQueue* queue) {
 
 Node* peek(PriorityQueue* queue) {
     if (!queue->queueSize) {
-        //Priority queue is empty.
         return NULL;
     }
     return &queue->nodes[0];
 }
 
-// Pathfinding
 Path getPathTo(Tile** map, int startX, int startY, int goalX, int goalY) {
-    // Create the binary heap
     PriorityQueue pq;
     pq.queueSize = 0;
 
-    // Create the 2d array of nodes
     Node** openList = calloc(MAP_HEIGHT, sizeof(Node*));
     for (int y = 0; y < MAP_HEIGHT; y ++) {
         openList[y] = calloc(MAP_WIDTH, sizeof(Node));
@@ -98,40 +91,33 @@ Path getPathTo(Tile** map, int startX, int startY, int goalX, int goalY) {
         }
     }
 
-    // Add the starting node to the list
     openList[startY][startX].costInSteps = 0;
     openList[startY][startX].sumCost = (float)(0);
-
     enqueue(&pq, (Node){ .x = startX, .y = startY, .costInSteps = 0, .sumCost = 0});
 
-    // Core loop
     Node goalNode;
     while (pq.queueSize > 0) {
         Node currentNode = dequeue(&pq);
-        // Check if the current node is the goal.
         if (currentNode.x == goalX && currentNode.y == goalY) {
             goalNode = currentNode;
             break;
         }
-        // generate currentNode's successors and set their parent to currentNode
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                // Check if that successor would be in-bounds
-                if (MAP_WIDTH < currentNode.x + i && currentNode.x + i < 0 && MAP_HEIGHT < currentNode.y + j && currentNode.y + j < 0) {
+                if (currentNode.x + i > MAP_WIDTH || currentNode.x + i < 0 || currentNode.y + j > MAP_HEIGHT || currentNode.y + j < 0) {
                     continue;
                 }    
-                // Check if the successor would be a walkable tile
                 if (!map[currentNode.y + j][currentNode.x + i].walkable) {
                     continue;
                 }
-                float stepCost = currentNode.costInSteps + 1; // Eventually you could "weight" the step cost for obstructed tiles.
-                if ((i == -1 && j == -1) || (i == -1 && j == 1) || (i == 1 && j == -1) || (i == 1 && j == 1)) {
-                    stepCost += 0.4; //Approximating the root-2 cost of moving diagonally
+
+                float stepCost = currentNode.costInSteps + 1; // You could weight the step cost for obstructed tiles.
+                if (i != 0 && j != 0) {
+                    stepCost += 0.4; //Approximating the root-2 cost of moving diagonally.
                 }
                 float heuristicCost = sqrtf((float)(SQUARE((currentNode.x + i) - goalX)) + (float)(SQUARE((currentNode.y + j) - goalY)));
                 float totalCost = stepCost + heuristicCost;
 
-                // If this node has a lower cost than a node already in the list at the same position, add it. Otherwise, skip it.
                 if (totalCost < openList[currentNode.y + j][currentNode.x + i].sumCost) {
                     Node successorNode = { 
                         .parentX = currentNode.x, .parentY = currentNode.y, .x = currentNode.x + i,
