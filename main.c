@@ -1,8 +1,5 @@
 #include "main.h"
 
-const int MAP_HEIGHT = 25;
-const int MAP_WIDTH = 100;
-
 Map map;
 int playerID;
 Registry* world;
@@ -16,7 +13,7 @@ int main(void) {
     world = ecsInitWorld();
 
     // Set up the Tile Map.
-    Map map = (Map){ .tiles = createMapTiles(), .WIDTH = MAP_WIDTH, .HEIGHT = MAP_HEIGHT, .visibility = 0 };
+    Map map = (Map){ .tiles = createMapTiles(100, 25), .WIDTH = 100, .HEIGHT = 25, .visibility = 0 };
     generateFloor(&map, 5); // generateFloor handles initializing the player.
 
     // Test entity.
@@ -31,8 +28,8 @@ int main(void) {
     pushMessage("Thanks for playing!", BRIGHT(BLUE));
     displayMessageLog();
 
-    renderFrame(0, 0, map.WIDTH, map.HEIGHT);
-    renderFrame(0, map.HEIGHT + 1, map.WIDTH, 4);
+    renderFrame(0, 0, map.WIDTH + 1, map.HEIGHT + 1);
+    renderFrame(0, map.HEIGHT + 2, map.WIDTH + 1, 4);
     printDisplayBuffer();
     
 
@@ -45,7 +42,6 @@ int main(void) {
         renderTileMap(&map);
         ecsRenderSystem(world, &map);
         displayMessageLog();
-        renderFrame(0, 0, map.WIDTH, map.HEIGHT);
         printDisplayBuffer();
     }
 

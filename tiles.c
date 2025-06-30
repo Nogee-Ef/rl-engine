@@ -1,10 +1,10 @@
 #include "main.h"
 
-Tile** createMapTiles() {
-    Tile** tiles = calloc(MAP_HEIGHT, sizeof(Tile*));
-    for (int y = 0; y < MAP_HEIGHT; y ++) {
-        tiles[y] = calloc(MAP_WIDTH, sizeof(Tile));
-        for (int x = 0; x < MAP_WIDTH; x++) {
+Tile** createMapTiles(int width, int height) {
+    Tile** tiles = calloc(height, sizeof(Tile*));
+    for (int y = 0; y < height; y ++) {
+        tiles[y] = calloc(width, sizeof(Tile));
+        for (int x = 0; x < width; x++) {
                 tiles[y][x].ch = '#';
                 tiles[y][x].fg = WHITE;
                 tiles[y][x].bg = BLACK;
@@ -17,8 +17,7 @@ Tile** createMapTiles() {
 }
 
 void freeMapTiles(Map* map) {
-    for (int y = 0; y < map->HEIGHT; y++)
-    {
+    for (int y = 0; y < map->HEIGHT; y++) {
         free(map->tiles[y]);
     }
     free(map->tiles);
@@ -42,10 +41,8 @@ Room createRoom(int x, int y, int height, int width) {
 }
 
 void addRoomToMap(Map* map, Room room) {
-    for (int y = room.y; y < room.y + room.height; y++)
-    {
-        for (int x = room.x; x < room.x + room.width; x++)
-        {
+    for (int y = room.y; y < room.y + room.height; y++) {
+        for (int x = room.x; x < room.x + room.width; x++) {
             map->tiles[y][x].ch = '.';
             map->tiles[y][x].walkable = TRUE;
         }

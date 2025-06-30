@@ -1,6 +1,9 @@
 #include "main.h"
 #include <string.h>
 
+#define BUFFER_HEIGHT 32 // Map height + frame height + message log height
+#define BUFFER_WIDTH 102 // Map width + frame width
+
 typedef struct {
     char ch[4];
     int fg;
@@ -9,10 +12,10 @@ typedef struct {
 
 static Glyph** displayBuffer;
 void initDisplayBuffer(void) {
-    displayBuffer = calloc(MAP_HEIGHT+1, sizeof(Glyph*));
-    for (int y = 0; y < MAP_HEIGHT+1; y ++) {
-        displayBuffer[y] = calloc(MAP_WIDTH+1, sizeof(Glyph));
-        for (int x = 0; x < MAP_WIDTH+1; x++) {
+    displayBuffer = calloc(BUFFER_HEIGHT, sizeof(Glyph*));
+    for (int y = 0; y < BUFFER_HEIGHT; y ++) {
+        displayBuffer[y] = calloc(BUFFER_WIDTH, sizeof(Glyph));
+        for (int x = 0; x < BUFFER_WIDTH; x++) {
                 strcpy(displayBuffer[y][x].ch, " ");
                 displayBuffer[y][x].fg = WHITE;
                 displayBuffer[y][x].bg = BLACK;
@@ -21,8 +24,7 @@ void initDisplayBuffer(void) {
 }
 
 void freeDisplayBuffer(void) {
-    for (int y = 0; y < MAP_HEIGHT+1; y++)
-    {
+    for (int y = 0; y < BUFFER_HEIGHT; y++) {
         free(displayBuffer[y]);
     }
     free(displayBuffer);
@@ -30,9 +32,8 @@ void freeDisplayBuffer(void) {
 
 void printDisplayBuffer(void) {
     moveCursor(0,0);
-    for (int y = 0; y < MAP_HEIGHT+1; y++)
-    {
-        for (int x = 0; x < MAP_WIDTH+1; x++) {
+    for (int y = 0; y < BUFFER_HEIGHT; y++) {
+        for (int x = 0; x < BUFFER_WIDTH; x++) {
             printf("\x1b[%dm\x1b[%dm%s",displayBuffer[y][x].fg, displayBuffer[y][x].bg + 10, displayBuffer[y][x].ch);
         }
         printf("\n");
@@ -40,7 +41,7 @@ void printDisplayBuffer(void) {
 }
 
 void renderAt(int x, int y, int fg, int bg, char toPrint[4]) {
-    if (y > -1 && y < MAP_HEIGHT+1 && x > -1 && x < MAP_WIDTH+1) {
+    if (y > -1 && y < BUFFER_HEIGHT && x > -1 && x < BUFFER_WIDTH) {
                 strcpy(displayBuffer[y][x].ch, toPrint);
                 displayBuffer[y][x].fg = fg;
                 displayBuffer[y][x].bg = bg;
@@ -65,14 +66,14 @@ void renderFrame(int originX, int originY, int width, int height) {
 void renderTileMap(Map* map) {
     map->visibility++;
     computeFov(map, world->posComponents[world->posIndex[playerID]].x, world->posComponents[world->posIndex[playerID]].y, 12);
-    for (int y = 0; y < MAP_HEIGHT; y ++) {
-        for (int x = 0; x < MAP_WIDTH; x++) {
+    for (int y = 0; y < map->HEIGHT; y ++) {
+        for (int x = 0; x < map->WIDTH; x++) {
             if (map->tiles[y][x].visible == 0) {
                 continue;
             } else if (map->tiles[y][x].visible == map->visibility) {
-                renderAt(x, y, map->tiles[y][x].fg, map->tiles[y][x].bg, &map->tiles[y][x].ch);
+                renderAt(x + 1, y + 1, map->tiles[y][x].fg, map->tiles[y][x].bg, &map->tiles[y][x].ch);
             } else {
-                renderAt(x, y, BRIGHT(BLACK), map->tiles[y][x].bg, &map->tiles[y][x].ch);
+                renderAt(x + 1, y + 1, BRIGHT(BLACK), map->tiles[y][x].bg, &map->tiles[y][x].ch);
             }
         }
     }
@@ -107,7 +108,17 @@ void pushMessage(char message[100], int fg) {
 void displayMessageLog(void) {
     for (int i = numMessages; i > numMessages - 3; i--) {
         if (i > 0) {
-            drawString(0, 28 + i - numMessages, messageLog[i].fg, BLACK, messageLog[i].text);
+            const int length = (int)strlen(messageLog[i].text);
+            for (int l = 0; l < 80; l++) {
+                if (l < length) {
+                    const char toPrint[4] = {messageLog[i].text[l]};
+                    strcpy(displayBuffer[30 + i - numMessages][l + 1].ch, toPrint);
+                    displayBuffer[30 + i - numMessages][l + 1].fg = messageLog[i].fg;
+                } else {
+                    // Clear the rest of the buffer.
+                    strcpy(displayBuffer[30 + i - numMessages][l + 1].ch, " ");
+                }                
+            }
         }
     }
 }

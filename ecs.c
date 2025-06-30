@@ -56,7 +56,7 @@ void ecsRenderSystem(Registry* registry, Map* map) {
             continue;
         }
         renderAt(
-            registry->posComponents[i].x, registry->posComponents[i].y, 
+            registry->posComponents[i].x + 1, registry->posComponents[i].y + 1, 
             registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].fg, 
             registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].bg, 
             &registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].ch

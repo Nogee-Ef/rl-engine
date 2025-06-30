@@ -79,10 +79,10 @@ Path getPathTo(Map* map, int startX, int startY, int goalX, int goalY) {
     PriorityQueue pq;
     pq.queueSize = 0;
 
-    Node** openList = calloc(MAP_HEIGHT, sizeof(Node*));
-    for (int y = 0; y < MAP_HEIGHT; y ++) {
-        openList[y] = calloc(MAP_WIDTH, sizeof(Node));
-        for (int x = 0; x < MAP_WIDTH; x++) {
+    Node** openList = calloc(map->HEIGHT, sizeof(Node*));
+    for (int y = 0; y < map->HEIGHT; y ++) {
+        openList[y] = calloc(map->WIDTH, sizeof(Node));
+        for (int x = 0; x < map->WIDTH; x++) {
                 openList[y][x].x = x;
                 openList[y][x].y = y;
                 openList[y][x].sumCost = FLT_MAX;
@@ -102,7 +102,7 @@ Path getPathTo(Map* map, int startX, int startY, int goalX, int goalY) {
         }
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                if (currentNode.x + i > MAP_WIDTH || currentNode.x + i < 0 || currentNode.y + j > MAP_HEIGHT || currentNode.y + j < 0) {
+                if (currentNode.x + i > map->WIDTH || currentNode.x + i < 0 || currentNode.y + j > map->HEIGHT || currentNode.y + j < 0) {
                     continue;
                 }    
                 if (!map->tiles[currentNode.y + j][currentNode.x + i].walkable) {

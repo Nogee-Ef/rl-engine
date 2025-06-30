@@ -37,7 +37,7 @@ typedef struct {
     int visibility;
 } Map;
 
-Tile** createMapTiles();
+Tile** createMapTiles(int width, int height);
 void freeMapTiles(Map* map);
 void generateFloor(Map* map, int maxRooms);
 
@@ -119,8 +119,6 @@ Path getPathTo(Map* map, int startX, int startY, int goalX, int goalY);
 int computeFov(Map* map, int pov_x, int pov_y, int max_radius);
 
 /* Externs */
-extern const int MAP_HEIGHT;
-extern const int MAP_WIDTH;
 extern bool running;
 extern int playerID;
 extern Registry* world;

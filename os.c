@@ -45,6 +45,7 @@
         newSettings.c_lflag &= ~ECHO; // Disable echo.
         tcsetattr(STDIN_FILENO, TCSANOW, &newSettings);
 
+        printf("\033[8;33;102t"); // Resizes the terminal to 102 x 33.
         printf(HIDE);
         printf(CLEAR);
     }
