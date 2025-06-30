@@ -1,6 +1,4 @@
 #include "main.h"
-#include <float.h>
-#include <math.h>
 
 #define MAX_NODES 2500
 
@@ -77,7 +75,7 @@ Node* peek(PriorityQueue* queue) {
     return &queue->nodes[0];
 }
 
-Path getPathTo(Tile** map, int startX, int startY, int goalX, int goalY) {
+Path getPathTo(Map* map, int startX, int startY, int goalX, int goalY) {
     PriorityQueue pq;
     pq.queueSize = 0;
 
@@ -107,13 +105,13 @@ Path getPathTo(Tile** map, int startX, int startY, int goalX, int goalY) {
                 if (currentNode.x + i > MAP_WIDTH || currentNode.x + i < 0 || currentNode.y + j > MAP_HEIGHT || currentNode.y + j < 0) {
                     continue;
                 }    
-                if (!map[currentNode.y + j][currentNode.x + i].walkable) {
+                if (!map->tiles[currentNode.y + j][currentNode.x + i].walkable) {
                     continue;
                 }
 
                 float stepCost = currentNode.costInSteps + 1; // You could weight the step cost for obstructed tiles.
                 if (i != 0 && j != 0) {
-                    stepCost += 0.4; //Approximating the root-2 cost of moving diagonally.
+                    stepCost += 0.4f; //Approximating the root-2 cost of moving diagonally.
                 }
                 float heuristicCost = sqrtf((float)(SQUARE((currentNode.x + i) - goalX)) + (float)(SQUARE((currentNode.y + j) - goalY)));
                 float totalCost = stepCost + heuristicCost;

@@ -16,7 +16,6 @@
         codepage = GetConsoleOutputCP();
         SetConsoleOutputCP(CP_UTF8);
 
-        initDisplayBuffer();
         printf(HIDE);
         printf(CLEAR);
     }
@@ -24,7 +23,6 @@
     void onExit(void) {
         // It might also be a good idea to reverse enableVirtualTerminalProcessing.
         SetConsoleOutputCP(codepage);
-        freeDisplayBuffer();
     }
 
     void moveCursor(int x, int y) {
@@ -47,14 +45,12 @@
         newSettings.c_lflag &= ~ECHO; // Disable echo.
         tcsetattr(STDIN_FILENO, TCSANOW, &newSettings);
 
-        initDisplayBuffer();
         printf(HIDE);
         printf(CLEAR);
     }
 
     void onExit(void) {
         tcsetattr(STDIN_FILENO, TCSANOW, &oldSettings);
-        freeDisplayBuffer();
     }
 
     void moveCursor(int x, int y) {

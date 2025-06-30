@@ -62,10 +62,18 @@ void renderFrame(int originX, int originY, int width, int height) {
     }
 }
 
-void renderTileMap(Tile** map) {
+void renderTileMap(Map* map) {
+    map->visibility++;
+    computeFov(map, world->posComponents[world->posIndex[playerID]].x, world->posComponents[world->posIndex[playerID]].y, 12);
     for (int y = 0; y < MAP_HEIGHT; y ++) {
         for (int x = 0; x < MAP_WIDTH; x++) {
-            renderAt(x, y, map[y][x].fg, map[y][x].bg, &map[y][x].ch);
+            if (map->tiles[y][x].visible == 0) {
+                continue;
+            } else if (map->tiles[y][x].visible == map->visibility) {
+                renderAt(x, y, map->tiles[y][x].fg, map->tiles[y][x].bg, &map->tiles[y][x].ch);
+            } else {
+                renderAt(x, y, BRIGHT(BLACK), map->tiles[y][x].bg, &map->tiles[y][x].ch);
+            }
         }
     }
 }

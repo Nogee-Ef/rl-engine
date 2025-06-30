@@ -1,13 +1,13 @@
 #include "main.h"
 
-int moveEntity(Tile** map, int dx, int dy, int entityID) {
+int moveEntity(Map* map, int dx, int dy, int entityID) {
     if (
-        world->posComponents[world->posIndex[entityID]].x + dx < 0 || world->posComponents[world->posIndex[entityID]].x + dx > MAP_WIDTH || 
-        world->posComponents[world->posIndex[entityID]].y + dy < 0 || world->posComponents[world->posIndex[entityID]].y + dy > MAP_HEIGHT
+        world->posComponents[world->posIndex[entityID]].x + dx < 0 || world->posComponents[world->posIndex[entityID]].x + dx > map->WIDTH || 
+        world->posComponents[world->posIndex[entityID]].y + dy < 0 || world->posComponents[world->posIndex[entityID]].y + dy > map->HEIGHT
     ) {
         return 0;
     }
-    if (!map[world->posComponents[world->posIndex[entityID]].y + dy][world->posComponents[world->posIndex[entityID]].x + dx].walkable) {
+    if (!map->tiles[world->posComponents[world->posIndex[entityID]].y + dy][world->posComponents[world->posIndex[entityID]].x + dx].walkable) {
         pushMessage("That way is obstructed.", BRIGHT(BLACK));
         return 0;
     }
@@ -42,7 +42,7 @@ static int coordList[10][2] = {
     { 1, -1}, // NUMPAD Up Right
 };
 
-int handleInput(int input, Tile** map) {
+int handleInput(int input, Map* map) {
     if (input == 'q') {
         running = FALSE;
         return 1;
@@ -50,6 +50,7 @@ int handleInput(int input, Tile** map) {
     else if (input > 48 && input < 58) {
         return moveEntity(map, coordList[input-49][0], coordList[input-49][1], playerID);
     }
+    pushMessage("Invalid input.", YELLOW);
     return 0;
     //     case 75: // Arrow Left
     //         moveEntity(map, -1, 0);

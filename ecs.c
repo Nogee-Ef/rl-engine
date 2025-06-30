@@ -46,12 +46,15 @@ void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg)
     registry->renderSize++;
 }
 
-void ecsRenderSystem(Registry* registry) {
+void ecsRenderSystem(Registry* registry, Map* map) {
     /* 
     At some point it may be advantageous to check which set has fewer entries and iterate through that?
     For now it can be assumed that the Position and Renderable lists are the same size.
     */
     for (int i = 0; i < registry->posSize; i++) {
+        if (map->tiles[registry->posComponents[i].y][registry->posComponents[i].x].visible != map->visibility) {
+            continue;
+        }
         renderAt(
             registry->posComponents[i].x, registry->posComponents[i].y, 
             registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].fg, 
@@ -61,7 +64,10 @@ void ecsRenderSystem(Registry* registry) {
     }
 }
 
-void ecsTurnSystem(Registry* registry, Tile** map) {
+void ecsTurnSystem(Registry* registry, Map* map) {
+    if (!handleInput(getInput(), map)) {
+        return;
+    }
     for (int i = 0; i < registry->posSize; i++) {
         if (registry->posComponents[i].id != playerID) {
             Path aiPath = getPathTo(
@@ -77,9 +83,6 @@ void ecsTurnSystem(Registry* registry, Tile** map) {
                 aiPath.path[aiPath.pathLength - 1][1] - registry->posComponents[i].y, 
                 registry->posComponents[i].id
             );
-        }
-        else {
-            while(!handleInput(getInput(), map));
         }
     }
 }

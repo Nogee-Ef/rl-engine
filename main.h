@@ -3,11 +3,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <float.h>
+#include <math.h>
 
-#define TRUE 1
-#define FALSE 0
+#define TRUE true
+#define FALSE false
 
 #define SQUARE(a) ((a) * (a))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 /* OS */
 void displaySetup(void);
@@ -22,12 +26,20 @@ typedef struct {
     char ch;
     int fg;
     int bg;
-    int walkable;
+    bool walkable;
+    int visible;
 } Tile;
 
-Tile** createTilesMap();
-void freeMap(Tile** map);
-void generateFloor(Tile** map, int maxRooms);
+typedef struct {
+    Tile** tiles;
+    const int WIDTH;
+    const int HEIGHT;
+    int visibility;
+} Map;
+
+Tile** createMapTiles();
+void freeMapTiles(Map* map);
+void generateFloor(Map* map, int maxRooms);
 
 /* Display */
 #define CLEAR "\x1b[2J\x1b[3J" // Clears the terminal AND the scroll back.
@@ -51,7 +63,7 @@ void freeDisplayBuffer(void);
 void printDisplayBuffer(void);
 void renderAt(int x, int y, int fg, int bg, char toPrint[4]);
 void renderFrame(int originX, int originY, int width, int height);
-void renderTileMap(Tile** map);
+void renderTileMap(Map* map);
 void drawAt(int x, int y, int fg, int bg, char toPrint[4]);
 void drawString(int x, int y, int fg, int bg, char string[100]);
 void pushMessage(char message[100], int fg);
@@ -88,12 +100,12 @@ void ecsFreeWorld(Registry* registry);
 int ecsInitEntity(Registry* registry);
 void ecsAddPosition(Registry* registry, int entityID, int x, int y);
 void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg);
-void ecsRenderSystem(Registry* registry);
-void ecsTurnSystem(Registry* registry, Tile** map);
+void ecsRenderSystem(Registry* registry, Map* map);
+void ecsTurnSystem(Registry* registry, Map* map);
 
 /* Input */
-int handleInput(int input, Tile** map);
-int moveEntity(Tile** map, int dx, int dy, int entityID);
+int handleInput(int input, Map* map);
+int moveEntity(Map* map, int dx, int dy, int entityID);
 
 /* A* */
 typedef struct {
@@ -101,12 +113,15 @@ typedef struct {
     int pathLength;
 } Path;
 
-Path getPathTo(Tile** map, int startX, int startY, int goalX, int goalY);
+Path getPathTo(Map* map, int startX, int startY, int goalX, int goalY);
+
+/* FOV */
+int computeFov(Map* map, int pov_x, int pov_y, int max_radius);
 
 /* Externs */
 extern const int MAP_HEIGHT;
 extern const int MAP_WIDTH;
-extern int running;
+extern bool running;
 extern int playerID;
 extern Registry* world;
 
