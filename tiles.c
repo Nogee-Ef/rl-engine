@@ -31,13 +31,13 @@ typedef struct {
 } Room;
 
 Room createRoom(int x, int y, int height, int width) {
-    Room newRoom;
-    newRoom.x = x;
-    newRoom.y = y;
-    newRoom.height = height;
-    newRoom.width = width;
+    Room new_room;
+    new_room.x = x;
+    new_room.y = y;
+    new_room.height = height;
+    new_room.width = width;
 
-    return newRoom;
+    return new_room;
 }
 
 void addRoomToMap(Map* map, Room room) {
@@ -49,31 +49,31 @@ void addRoomToMap(Map* map, Room room) {
     }
 }
 
-void connectRoomCenters(Map* map, int startX, int startY, int endX, int endY) {
-    int tempX = startX;
-    int tempY = startY;
+void connectRoomCenters(Map* map, int start_x, int start_y, int end_x, int end_y) {
+    int temp_x = start_x;
+    int temp_y = start_y;
 
     while (TRUE) {
-        if (abs((tempX - 1) - endX) < abs(tempX - endX))
-        tempX--;
-        else if (abs((tempX + 1) - endX) < abs(tempX - endX))
-            tempX++;
-        else if (abs((tempY + 1) - endY) < abs(tempY - endY))
-            tempY++;
-        else if (abs((tempY - 1) - endY) < abs(tempY - endY))
-            tempY--;
+        if (abs((temp_x - 1) - end_x) < abs(temp_x - end_x))
+        temp_x--;
+        else if (abs((temp_x + 1) - end_x) < abs(temp_x - end_x))
+            temp_x++;
+        else if (abs((temp_y + 1) - end_y) < abs(temp_y - end_y))
+            temp_y++;
+        else if (abs((temp_y - 1) - end_y) < abs(temp_y - end_y))
+            temp_y--;
         else
             break;
         
-        map->tiles[tempY][tempX].ch = '.';
-        map->tiles[tempY][tempX].walkable = TRUE;
+        map->tiles[temp_y][temp_x].ch = '.';
+        map->tiles[temp_y][temp_x].walkable = TRUE;
     }
 }
 
-void generateFloor(Map* map, int maxRooms) {
+void generateFloor(Map* map, int max_rooms) {
     int y, x, height, width;
-    Room* rooms = calloc(maxRooms, sizeof(Room));
-    for (int n = 0; n < maxRooms; n++) {
+    Room* rooms = calloc(max_rooms, sizeof(Room));
+    for (int n = 0; n < max_rooms; n++) {
         y = (rand() % (map->HEIGHT - 10)) + 1;
         x = (rand() % (map->WIDTH - 20)) + 1;
         height = (rand() % 7) + 3;
@@ -86,9 +86,9 @@ void generateFloor(Map* map, int maxRooms) {
         }
     }
 
-    playerID = ecsInitEntity(world);
-    ecsAddPosition(world, playerID, rooms[0].x + (int)(rooms[0].width / 2), rooms[0].y + (int)(rooms[0].height / 2));
-    ecsAddRenderable(world, playerID, '@', BRIGHT(WHITE), BLACK);
+    player_id = ecsInitEntity(world);
+    ecsAddPosition(world, player_id, rooms[0].x + (int)(rooms[0].width / 2), rooms[0].y + (int)(rooms[0].height / 2));
+    ecsAddRenderable(world, player_id, '@', BRIGHT(WHITE), BLACK);
 
     free(rooms);
 }

@@ -4,10 +4,10 @@
     #include <Windows.h>
 
     void enableVirtualTerminalProcessing(void) {
-        HANDLE hOuput = GetStdHandle(STD_OUTPUT_HANDLE);
-        DWORD dwMode;
-        GetConsoleMode(hOuput, &dwMode);
-        SetConsoleMode(hOuput, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        HANDLE h_ouput = GetStdHandle(STD_OUTPUT_HANDLE);
+        DWORD dw_mode;
+        GetConsoleMode(h_ouput, &dw_mode);
+        SetConsoleMode(h_ouput, dw_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
     }
 
     static unsigned int codepage;
@@ -37,21 +37,21 @@
     #include <termios.h>
     #include <unistd.h>
 
-    static struct termios oldSettings, newSettings;
+    static struct termios old_settings, new_settings;
     void displaySetup(void) {
-        tcgetattr(STDIN_FILENO, &oldSettings);
-        newSettings = oldSettings;
-        newSettings.c_lflag &= ~ICANON; // Disable canonical input processing.
-        newSettings.c_lflag &= ~ECHO; // Disable echo.
-        tcsetattr(STDIN_FILENO, TCSANOW, &newSettings);
+        tcgetattr(STDIN_FILENO, &old_settings);
+        new_settings = old_settings;
+        new_settings.c_lflag &= ~ICANON; // Disable canonical input processing.
+        new_settings.c_lflag &= ~ECHO; // Disable echo.
+        tcsetattr(STDIN_FILENO, TCSANOW, &new_settings);
 
-        printf("\033[8;33;102t"); // Resizes the terminal to 102 x 33.
+        printf("\x1b[8;33;102t"); // Resizes the terminal to 102 x 33.
         printf(HIDE);
         printf(CLEAR);
     }
 
     void onExit(void) {
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldSettings);
+        tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
     }
 
     void moveCursor(int x, int y) {

@@ -1,7 +1,7 @@
 #include "main.h"
 
 Map map;
-int playerID;
+int player_id;
 Registry* world;
 bool running;
 
@@ -17,15 +17,15 @@ int main(void) {
     generateFloor(&map, 5); // generateFloor handles initializing the player.
 
     // Test entity.
-    int npcID = ecsInitEntity(world);
-    ecsAddPosition(world, npcID, 30, 15);
-    ecsAddRenderable(world, npcID, '@', BRIGHT(YELLOW), BLACK);
+    int npc_id = ecsInitEntity(world);
+    ecsAddPosition(world, npc_id, 30, 15);
+    ecsAddRenderable(world, npc_id, '@', BRIGHT(YELLOW), BLACK);
     
     initDisplayBuffer();
     renderTileMap(&map); // Draw the initial map so the screen doesn't appear blank before the first input.
     ecsRenderSystem(world, &map);
 
-    pushMessage("Thanks for playing!", BRIGHT(BLUE));
+    pushMessage("Thanks for playing!", CYAN);
     displayMessageLog();
 
     renderFrame(0, 0, map.WIDTH + 1, map.HEIGHT + 1);

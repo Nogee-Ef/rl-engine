@@ -1,32 +1,32 @@
 #include "main.h"
 
 Registry* ecsInitWorld(void) {
-    Registry *newWorld = (Registry *)malloc(sizeof(Registry));
-    *newWorld = (Registry){
-        .entityCount = 0, 
-        .posComponents = calloc(MAXENTITIES, sizeof(PositionComponent)), 
-        .posIndex = calloc(MAXENTITIES, sizeof(int)), 
-        .posSize = 0,
-        .renderComponents = calloc(MAXENTITIES, sizeof(RenderableComponent)), 
-        .renderIndex = calloc(MAXENTITIES, sizeof(int)), 
-        .renderSize = 0,
+    Registry *new_world = (Registry *)malloc(sizeof(Registry));
+    *new_world = (Registry){
+        .entity_count = 0, 
+        .pos_components = calloc(MAX_ENTITIES, sizeof(PositionComponent)), 
+        .pos_index = calloc(MAX_ENTITIES, sizeof(int)), 
+        .pos_size = 0,
+        .render_components = calloc(MAX_ENTITIES, sizeof(RenderableComponent)), 
+        .render_index = calloc(MAX_ENTITIES, sizeof(int)), 
+        .render_size = 0,
     };
 
-    return newWorld;
+    return new_world;
 }
 
 void ecsFreeWorld(Registry* registry) {
-    free(registry->posComponents);
-    free(registry->posIndex);
-    free(registry->renderComponents);
-    free(registry->renderIndex);
+    free(registry->pos_components);
+    free(registry->pos_index);
+    free(registry->render_components);
+    free(registry->render_index);
     free(registry);
 }
 
 // Returns the entity ID of the newly initialized entity
 int ecsInitEntity(Registry* registry) {
-    if (registry->entityCount < MAXENTITIES) {
-        return ++registry->entityCount;
+    if (registry->entity_count < MAX_ENTITIES) {
+        return ++registry->entity_count;
     }
     else {
         // Error: maximum entity count exceeded.
@@ -34,16 +34,16 @@ int ecsInitEntity(Registry* registry) {
     }
 }
 
-void ecsAddPosition(Registry* registry, int entityID, int x, int y) {
-    registry->posComponents[registry->posSize] = (PositionComponent){ .id = entityID, .x = x, .y = y };
-    registry->posIndex[entityID] = registry->posSize;
-    registry->posSize++;
+void ecsAddPosition(Registry* registry, int entity_id, int x, int y) {
+    registry->pos_components[registry->pos_size] = (PositionComponent){ .id = entity_id, .x = x, .y = y };
+    registry->pos_index[entity_id] = registry->pos_size;
+    registry->pos_size++;
 }
 
-void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg) {
-    registry->renderComponents[registry->renderSize] = (RenderableComponent){ .id = entityID, .ch = ch, .fg = fg, .bg = bg };
-    registry->renderIndex[entityID] = registry->renderSize;
-    registry->renderSize++;
+void ecsAddRenderable(Registry* registry, int entity_id, char ch, int fg, int bg) {
+    registry->render_components[registry->render_size] = (RenderableComponent){ .id = entity_id, .ch = ch, .fg = fg, .bg = bg };
+    registry->render_index[entity_id] = registry->render_size;
+    registry->render_size++;
 }
 
 void ecsRenderSystem(Registry* registry, Map* map) {
@@ -51,15 +51,15 @@ void ecsRenderSystem(Registry* registry, Map* map) {
     At some point it may be advantageous to check which set has fewer entries and iterate through that?
     For now it can be assumed that the Position and Renderable lists are the same size.
     */
-    for (int i = 0; i < registry->posSize; i++) {
-        if (map->tiles[registry->posComponents[i].y][registry->posComponents[i].x].visible != map->visibility) {
+    for (int i = 0; i < registry->pos_size; i++) {
+        if (map->tiles[registry->pos_components[i].y][registry->pos_components[i].x].visible != map->visibility) {
             continue;
         }
         renderAt(
-            registry->posComponents[i].x + 1, registry->posComponents[i].y + 1, 
-            registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].fg, 
-            registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].bg, 
-            &registry->renderComponents[registry->renderIndex[registry->posComponents[i].id]].ch
+            registry->pos_components[i].x + 1, registry->pos_components[i].y + 1, 
+            registry->render_components[registry->render_index[registry->pos_components[i].id]].fg, 
+            registry->render_components[registry->render_index[registry->pos_components[i].id]].bg, 
+            &registry->render_components[registry->render_index[registry->pos_components[i].id]].ch
         );
     }
 }
@@ -68,20 +68,20 @@ void ecsTurnSystem(Registry* registry, Map* map) {
     if (!handleInput(getInput(), map)) {
         return;
     }
-    for (int i = 0; i < registry->posSize; i++) {
-        if (registry->posComponents[i].id != playerID) {
-            Path aiPath = getPathTo(
+    for (int i = 0; i < registry->pos_size; i++) {
+        if (registry->pos_components[i].id != player_id) {
+            Path ai_path = getPathTo(
                 map, 
-                registry->posComponents[i].x, 
-                registry->posComponents[i].y, 
-                registry->posComponents[registry->posIndex[playerID]].x, 
-                registry->posComponents[registry->posIndex[playerID]].y
+                registry->pos_components[i].x, 
+                registry->pos_components[i].y, 
+                registry->pos_components[registry->pos_index[player_id]].x, 
+                registry->pos_components[registry->pos_index[player_id]].y
             );
             moveEntity(
                 map,
-                aiPath.path[aiPath.pathLength - 1][0] - registry->posComponents[i].x, 
-                aiPath.path[aiPath.pathLength - 1][1] - registry->posComponents[i].y, 
-                registry->posComponents[i].id
+                ai_path.path[ai_path.path_length - 1][0] - registry->pos_components[i].x, 
+                ai_path.path[ai_path.path_length - 1][1] - registry->pos_components[i].y, 
+                registry->pos_components[i].id
             );
         }
     }

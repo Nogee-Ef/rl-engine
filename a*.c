@@ -3,17 +3,17 @@
 #define MAX_NODES 2500
 
 typedef struct {
-    int parentX;
-    int parentY;
+    int parent_x;
+    int parent_y;
     int x;
     int y;
-    float costInSteps;
-    float sumCost;
+    float cost_in_steps;
+    float sum_cost;
 } Node;
 
 typedef struct {
     Node nodes[MAX_NODES];
-    int queueSize;
+    int queue_size;
 } PriorityQueue;
 
 void swapNode(Node* a, Node* b) {
@@ -23,19 +23,19 @@ void swapNode(Node* a, Node* b) {
 }
 
 void heapifyUp(PriorityQueue* queue, int index) {
-    if (index && queue->nodes[(index - 1) / 2].sumCost > queue->nodes[index].sumCost) {
+    if (index && queue->nodes[(index - 1) / 2].sum_cost > queue->nodes[index].sum_cost) {
         swapNode(&queue->nodes[(index - 1) / 2], &queue->nodes[index]);
         heapifyUp(queue, (index - 1) / 2);
     }
 }
 
-void enqueue(PriorityQueue* queue, Node newNode) {
-    if (queue->queueSize == MAX_NODES) {
+void enqueue(PriorityQueue* queue, Node new_node) {
+    if (queue->queue_size == MAX_NODES) {
         return;
     }
 
-    queue->nodes[queue->queueSize++] = newNode;
-    heapifyUp(queue, queue->queueSize - 1);
+    queue->nodes[queue->queue_size++] = new_node;
+    heapifyUp(queue, queue->queue_size - 1);
 }
 
 void heapifyDown(PriorityQueue* queue, int index) {
@@ -43,12 +43,12 @@ void heapifyDown(PriorityQueue* queue, int index) {
     int left = 2 * index + 1;
     int right = 2 * index + 2;
 
-    if (left < queue->queueSize
-        && queue->nodes[left].sumCost < queue->nodes[smallest].sumCost)
+    if (left < queue->queue_size
+        && queue->nodes[left].sum_cost < queue->nodes[smallest].sum_cost)
         smallest = left;
 
-    if (right < queue->queueSize
-        && queue->nodes[right].sumCost < queue->nodes[smallest].sumCost)
+    if (right < queue->queue_size
+        && queue->nodes[right].sum_cost < queue->nodes[smallest].sum_cost)
         smallest = right;
 
     if (smallest != index) {
@@ -62,83 +62,83 @@ Node dequeue(PriorityQueue* queue) {
     //     return;
     // }
 
-    Node topNode = queue->nodes[0];
-    queue->nodes[0] = queue->nodes[--queue->queueSize];
+    Node top_node = queue->nodes[0];
+    queue->nodes[0] = queue->nodes[--queue->queue_size];
     heapifyDown(queue, 0);
-    return topNode;
+    return top_node;
 }
 
 Node* peek(PriorityQueue* queue) {
-    if (!queue->queueSize) {
+    if (!queue->queue_size) {
         return NULL;
     }
     return &queue->nodes[0];
 }
 
-Path getPathTo(Map* map, int startX, int startY, int goalX, int goalY) {
-    PriorityQueue pq;
-    pq.queueSize = 0;
+Path getPathTo(Map* map, int start_x, int start_y, int goal_x, int goal_y) {
+    PriorityQueue priority_queue;
+    priority_queue.queue_size = 0;
 
-    Node** openList = calloc(map->HEIGHT, sizeof(Node*));
+    Node** open_list = calloc(map->HEIGHT, sizeof(Node*));
     for (int y = 0; y < map->HEIGHT; y ++) {
-        openList[y] = calloc(map->WIDTH, sizeof(Node));
+        open_list[y] = calloc(map->WIDTH, sizeof(Node));
         for (int x = 0; x < map->WIDTH; x++) {
-                openList[y][x].x = x;
-                openList[y][x].y = y;
-                openList[y][x].sumCost = FLT_MAX;
+                open_list[y][x].x = x;
+                open_list[y][x].y = y;
+                open_list[y][x].sum_cost = FLT_MAX;
         }
     }
 
-    openList[startY][startX].costInSteps = 0;
-    openList[startY][startX].sumCost = (float)(0);
-    enqueue(&pq, (Node){ .x = startX, .y = startY, .costInSteps = 0, .sumCost = 0});
+    open_list[start_y][start_x].cost_in_steps = 0;
+    open_list[start_y][start_x].sum_cost = (float)(0);
+    enqueue(&priority_queue, (Node){ .x = start_x, .y = start_y, .cost_in_steps = 0, .sum_cost = 0});
 
-    Node goalNode;
-    while (pq.queueSize > 0) {
-        Node currentNode = dequeue(&pq);
-        if (currentNode.x == goalX && currentNode.y == goalY) {
-            goalNode = currentNode;
+    Node goal_node;
+    while (priority_queue.queue_size > 0) {
+        Node current_node = dequeue(&priority_queue);
+        if (current_node.x == goal_x && current_node.y == goal_y) {
+            goal_node = current_node;
             break;
         }
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                if (currentNode.x + i > map->WIDTH || currentNode.x + i < 0 || currentNode.y + j > map->HEIGHT || currentNode.y + j < 0) {
+                if (current_node.x + i > map->WIDTH || current_node.x + i < 0 || current_node.y + j > map->HEIGHT || current_node.y + j < 0) {
                     continue;
                 }    
-                if (!map->tiles[currentNode.y + j][currentNode.x + i].walkable) {
+                if (!map->tiles[current_node.y + j][current_node.x + i].walkable) {
                     continue;
                 }
 
-                float stepCost = currentNode.costInSteps + 1; // You could weight the step cost for obstructed tiles.
+                float step_cost = current_node.cost_in_steps + 1; // You could weight the step cost for obstructed tiles.
                 if (i != 0 && j != 0) {
-                    stepCost += 0.4f; //Approximating the root-2 cost of moving diagonally.
+                    step_cost += 0.4f; //Approximating the root-2 cost of moving diagonally.
                 }
-                float heuristicCost = sqrtf((float)(SQUARE((currentNode.x + i) - goalX)) + (float)(SQUARE((currentNode.y + j) - goalY)));
-                float totalCost = stepCost + heuristicCost;
+                float heuristic_cost = sqrtf((float)(SQUARE((current_node.x + i) - goal_x)) + (float)(SQUARE((current_node.y + j) - goal_y)));
+                float total_cost = step_cost + heuristic_cost;
 
-                if (totalCost < openList[currentNode.y + j][currentNode.x + i].sumCost) {
-                    Node successorNode = { 
-                        .parentX = currentNode.x, .parentY = currentNode.y, .x = currentNode.x + i,
-                        .y = currentNode.y + j, .costInSteps = stepCost, .sumCost = totalCost
+                if (total_cost < open_list[current_node.y + j][current_node.x + i].sum_cost) {
+                    Node successor_node = { 
+                        .parent_x = current_node.x, .parent_y = current_node.y, .x = current_node.x + i,
+                        .y = current_node.y + j, .cost_in_steps = step_cost, .sum_cost = total_cost
                     };
-                    openList[currentNode.y + j][currentNode.x + i] = successorNode;
-                    enqueue(&pq, successorNode);
+                    open_list[current_node.y + j][current_node.x + i] = successor_node;
+                    enqueue(&priority_queue, successor_node);
                 }
             }
         }
     }
 
-    Path newPath;
-    newPath.pathLength = 0;
-    Node* targetNode = &goalNode;
+    Path new_path;
+    new_path.path_length = 0;
+    Node* target_node = &goal_node;
     while(TRUE) {
-        if (targetNode->x == startX && targetNode->y == startY) {
+        if (target_node->x == start_x && target_node->y == start_y) {
             break;
         }
-        newPath.path[newPath.pathLength][0] = targetNode->x;
-        newPath.path[newPath.pathLength][1] = targetNode->y;
-        targetNode = &openList[targetNode->parentY][targetNode->parentX];
-        newPath.pathLength++;
+        new_path.path[new_path.path_length][0] = target_node->x;
+        new_path.path[new_path.path_length][1] = target_node->y;
+        target_node = &open_list[target_node->parent_y][target_node->parent_x];
+        new_path.path_length++;
     }
-    return newPath;
+    return new_path;
 }

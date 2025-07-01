@@ -39,14 +39,13 @@ typedef struct {
 
 Tile** createMapTiles(int width, int height);
 void freeMapTiles(Map* map);
-void generateFloor(Map* map, int maxRooms);
+void generateFloor(Map* map, int max_rooms);
 
 /* Display */
 #define CLEAR "\x1b[2J\x1b[3J" // Clears the terminal AND the scroll back.
 #define HIDE "\x1b[?25l" // Hides the cursor.
 #define SHOW "\x1b[?25h" // Shows the cursor.
 
-// Colors
 #define RESET "\x1b[0m" // Resets color to its default value.
 
 #define BLACK 30
@@ -54,6 +53,8 @@ void generateFloor(Map* map, int maxRooms);
 #define GREEN 32
 #define YELLOW 33
 #define BLUE 34
+#define MAGENTA 35
+#define CYAN 36
 #define WHITE 37
 
 #define BRIGHT(a) (a+60)
@@ -61,16 +62,16 @@ void generateFloor(Map* map, int maxRooms);
 void initDisplayBuffer(void);
 void freeDisplayBuffer(void);
 void printDisplayBuffer(void);
-void renderAt(int x, int y, int fg, int bg, char toPrint[4]);
-void renderFrame(int originX, int originY, int width, int height);
+void renderAt(int x, int y, int fg, int bg, char to_print[4]);
+void renderFrame(int origin_x, int origin_y, int width, int height);
 void renderTileMap(Map* map);
-void drawAt(int x, int y, int fg, int bg, char toPrint[4]);
+void drawAt(int x, int y, int fg, int bg, char to_print[4]);
 void drawString(int x, int y, int fg, int bg, char string[100]);
 void pushMessage(char message[100], int fg);
 void displayMessageLog(void);
 
 /* ECS */
-#define MAXENTITIES 100
+#define MAX_ENTITIES 100
 
 typedef struct {
     int id;
@@ -86,41 +87,41 @@ typedef struct {
 } RenderableComponent;
 
 typedef struct {
-    int entityCount;
-    PositionComponent *posComponents;
-    int *posIndex;
-    int posSize;
-    RenderableComponent *renderComponents;
-    int *renderIndex;
-    int renderSize;
+    int entity_count;
+    PositionComponent *pos_components;
+    int *pos_index;
+    int pos_size;
+    RenderableComponent *render_components;
+    int *render_index;
+    int render_size;
 } Registry;
 
 Registry* ecsInitWorld(void);
 void ecsFreeWorld(Registry* registry);
 int ecsInitEntity(Registry* registry);
-void ecsAddPosition(Registry* registry, int entityID, int x, int y);
-void ecsAddRenderable(Registry* registry, int entityID, char ch, int fg, int bg);
+void ecsAddPosition(Registry* registry, int entity_id, int x, int y);
+void ecsAddRenderable(Registry* registry, int entity_id, char ch, int fg, int bg);
 void ecsRenderSystem(Registry* registry, Map* map);
 void ecsTurnSystem(Registry* registry, Map* map);
 
 /* Input */
 int handleInput(int input, Map* map);
-int moveEntity(Map* map, int dx, int dy, int entityID);
+int moveEntity(Map* map, int dx, int dy, int entity_id);
 
 /* A* */
 typedef struct {
     int path[100][2]; // Max path length is 100
-    int pathLength;
+    int path_length;
 } Path;
 
-Path getPathTo(Map* map, int startX, int startY, int goalX, int goalY);
+Path getPathTo(Map* map, int start_x, int start_y, int goal_x, int goal_y);
 
 /* FOV */
 int computeFov(Map* map, int pov_x, int pov_y, int max_radius);
 
 /* Externs */
 extern bool running;
-extern int playerID;
+extern int player_id;
 extern Registry* world;
 
 #endif

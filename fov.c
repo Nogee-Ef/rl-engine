@@ -68,7 +68,7 @@ int computeFov(Map* map, int pov_x, int pov_y, int max_radius) {
         int max_radius_y = MAX(map->HEIGHT - pov_y, pov_y);
         max_radius = (int)(sqrtf(max_radius_x * max_radius_x + max_radius_y * max_radius_y)) + 1;
     }
-    for (int octant = 0; octant < 8; ++octant) {
+    for (int octant = 0; octant < 8; octant++) {
         scan(map, pov_x, pov_y, 1, 1.0, 0.0, max_radius, octant);
     }
     map->tiles[pov_y][pov_x].visible = map->visibility;

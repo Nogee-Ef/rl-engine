@@ -1,36 +1,36 @@
 #include "main.h"
 
-int moveEntity(Map* map, int dx, int dy, int entityID) {
+int moveEntity(Map* map, int dx, int dy, int entity_id) {
     if (
-        world->posComponents[world->posIndex[entityID]].x + dx < 0 || world->posComponents[world->posIndex[entityID]].x + dx > map->WIDTH || 
-        world->posComponents[world->posIndex[entityID]].y + dy < 0 || world->posComponents[world->posIndex[entityID]].y + dy > map->HEIGHT
+        world->pos_components[world->pos_index[entity_id]].x + dx < 0 || world->pos_components[world->pos_index[entity_id]].x + dx > map->WIDTH || 
+        world->pos_components[world->pos_index[entity_id]].y + dy < 0 || world->pos_components[world->pos_index[entity_id]].y + dy > map->HEIGHT
     ) {
         return 0;
     }
-    if (!map->tiles[world->posComponents[world->posIndex[entityID]].y + dy][world->posComponents[world->posIndex[entityID]].x + dx].walkable) {
+    if (!map->tiles[world->pos_components[world->pos_index[entity_id]].y + dy][world->pos_components[world->pos_index[entity_id]].x + dx].walkable) {
         pushMessage("That way is obstructed.", BRIGHT(BLACK));
         return 0;
     }
     // Check if there is another entity occupying this position
-    for (int i = 0; i < world->posSize; i++) {
+    for (int i = 0; i < world->pos_size; i++) {
         if (
-            world->posComponents[i].id != entityID && // The entity can't bump into itself if it sits still.
-            world->posComponents[i].y == world->posComponents[world->posIndex[entityID]].y + dy &&
-            world->posComponents[i].x == world->posComponents[world->posIndex[entityID]].x + dx
+            world->pos_components[i].id != entity_id && // The entity can't bump into itself if it sits still.
+            world->pos_components[i].y == world->pos_components[world->pos_index[entity_id]].y + dy &&
+            world->pos_components[i].x == world->pos_components[world->pos_index[entity_id]].x + dx
         ) {
-            char toPrint[100];
-            sprintf(toPrint, "Entity %d bumps into entity %d", entityID, world->posComponents[i].id);
-            pushMessage(toPrint, WHITE);
+            char to_print[100];
+            sprintf(to_print, "Entity %d bumps into entity %d", entity_id, world->pos_components[i].id);
+            pushMessage(to_print, WHITE);
             return 1;
         }
     }
 
-    world->posComponents[world->posIndex[entityID]].x += dx;
-    world->posComponents[world->posIndex[entityID]].y += dy;
+    world->pos_components[world->pos_index[entity_id]].x += dx;
+    world->pos_components[world->pos_index[entity_id]].y += dy;
     return 1;
 }
 
-static int coordList[10][2] = { 
+static const int COORD_LIST[10][2] = { 
     {-1, 1}, // NUMPAD Down Left
     { 0, 1}, // NUMPAD Down
     { 1, 1}, // NUMPAD Down Right
@@ -48,7 +48,7 @@ int handleInput(int input, Map* map) {
         return 1;
     }
     else if (input > 48 && input < 58) {
-        return moveEntity(map, coordList[input-49][0], coordList[input-49][1], playerID);
+        return moveEntity(map, COORD_LIST[input-49][0], COORD_LIST[input-49][1], player_id);
     }
     pushMessage("Invalid input.", YELLOW);
     return 0;

@@ -10,62 +10,62 @@ typedef struct {
     int bg;
 } Glyph;
 
-static Glyph** displayBuffer;
+static Glyph** display_buffer;
 void initDisplayBuffer(void) {
-    displayBuffer = calloc(BUFFER_HEIGHT, sizeof(Glyph*));
+    display_buffer = calloc(BUFFER_HEIGHT, sizeof(Glyph*));
     for (int y = 0; y < BUFFER_HEIGHT; y ++) {
-        displayBuffer[y] = calloc(BUFFER_WIDTH, sizeof(Glyph));
+        display_buffer[y] = calloc(BUFFER_WIDTH, sizeof(Glyph));
         for (int x = 0; x < BUFFER_WIDTH; x++) {
-                strcpy(displayBuffer[y][x].ch, " ");
-                displayBuffer[y][x].fg = WHITE;
-                displayBuffer[y][x].bg = BLACK;
+                strcpy(display_buffer[y][x].ch, " ");
+                display_buffer[y][x].fg = WHITE;
+                display_buffer[y][x].bg = BLACK;
         }
     }
 }
 
 void freeDisplayBuffer(void) {
     for (int y = 0; y < BUFFER_HEIGHT; y++) {
-        free(displayBuffer[y]);
+        free(display_buffer[y]);
     }
-    free(displayBuffer);
+    free(display_buffer);
 }
 
 void printDisplayBuffer(void) {
     moveCursor(0,0);
     for (int y = 0; y < BUFFER_HEIGHT; y++) {
         for (int x = 0; x < BUFFER_WIDTH; x++) {
-            printf("\x1b[%dm\x1b[%dm%s",displayBuffer[y][x].fg, displayBuffer[y][x].bg + 10, displayBuffer[y][x].ch);
+            printf("\x1b[%dm\x1b[%dm%s",display_buffer[y][x].fg, display_buffer[y][x].bg + 10, display_buffer[y][x].ch);
         }
         printf("\n");
     }
 }
 
-void renderAt(int x, int y, int fg, int bg, char toPrint[4]) {
+void renderAt(int x, int y, int fg, int bg, char to_print[4]) {
     if (y > -1 && y < BUFFER_HEIGHT && x > -1 && x < BUFFER_WIDTH) {
-                strcpy(displayBuffer[y][x].ch, toPrint);
-                displayBuffer[y][x].fg = fg;
-                displayBuffer[y][x].bg = bg;
+                strcpy(display_buffer[y][x].ch, to_print);
+                display_buffer[y][x].fg = fg;
+                display_buffer[y][x].bg = bg;
     }
 }
 
-void renderFrame(int originX, int originY, int width, int height) {
-    renderAt(originX, originY, WHITE, BLACK, "┌");
-    renderAt(originX + width, originY, WHITE, BLACK, "┐");
-    renderAt(originX, originY + height, WHITE, BLACK, "└");
-    renderAt(originX + width, originY + height, WHITE, BLACK, "┘");
+void renderFrame(int origin_x, int origin_y, int width, int height) {
+    renderAt(origin_x, origin_y, WHITE, BLACK, "┌");
+    renderAt(origin_x + width, origin_y, WHITE, BLACK, "┐");
+    renderAt(origin_x, origin_y + height, WHITE, BLACK, "└");
+    renderAt(origin_x + width, origin_y + height, WHITE, BLACK, "┘");
     for (int i = 1; i < width; i++) {
-        renderAt(originX + i, originY, WHITE, BLACK, "─");
-        renderAt(originX + i, originY + height, WHITE, BLACK, "─");
+        renderAt(origin_x + i, origin_y, WHITE, BLACK, "─");
+        renderAt(origin_x + i, origin_y + height, WHITE, BLACK, "─");
     }
     for (int n = 1; n < height; n++) {
-        renderAt(originX, originY + n, WHITE, BLACK, "│");
-        renderAt(originX + width, originY + n, WHITE, BLACK, "│");
+        renderAt(origin_x, origin_y + n, WHITE, BLACK, "│");
+        renderAt(origin_x + width, origin_y + n, WHITE, BLACK, "│");
     }
 }
 
 void renderTileMap(Map* map) {
     map->visibility++;
-    computeFov(map, world->posComponents[world->posIndex[playerID]].x, world->posComponents[world->posIndex[playerID]].y, 12);
+    computeFov(map, world->pos_components[world->pos_index[player_id]].x, world->pos_components[world->pos_index[player_id]].y, 12);
     for (int y = 0; y < map->HEIGHT; y ++) {
         for (int x = 0; x < map->WIDTH; x++) {
             if (map->tiles[y][x].visible == 0) {
@@ -79,9 +79,9 @@ void renderTileMap(Map* map) {
     }
 }
 
-void drawAt(int x, int y, int fg, int bg, char toPrint[4]) {
+void drawAt(int x, int y, int fg, int bg, char to_print[4]) {
     moveCursor(x, y);
-    printf("\x1b[%dm\x1b[%dm%s%s", fg, bg + 10, toPrint, RESET);
+    printf("\x1b[%dm\x1b[%dm%s%s", fg, bg + 10, to_print, RESET);
 }
 
 void drawString(int x, int y, int fg, int bg, char string[100]) {
@@ -94,29 +94,29 @@ typedef struct {
     int fg;
 } Message;
 
-static Message messageLog[80];
-static int numMessages = 0;
+static Message message_log[80];
+static int num_messages = 0;
 
 void pushMessage(char message[100], int fg) {
-    if (numMessages < 80) {
-        numMessages++;
-        strcpy(messageLog[numMessages].text, message);
-        messageLog[numMessages].fg = fg;
+    if (num_messages < 80) {
+        num_messages++;
+        strcpy(message_log[num_messages].text, message);
+        message_log[num_messages].fg = fg;
     }
 }
 
 void displayMessageLog(void) {
-    for (int i = numMessages; i > numMessages - 3; i--) {
+    for (int i = num_messages; i > num_messages - 3; i--) {
         if (i > 0) {
-            const int length = (int)strlen(messageLog[i].text);
+            const int length = (int)strlen(message_log[i].text);
             for (int l = 0; l < 80; l++) {
                 if (l < length) {
-                    const char toPrint[4] = {messageLog[i].text[l]};
-                    strcpy(displayBuffer[30 + i - numMessages][l + 1].ch, toPrint);
-                    displayBuffer[30 + i - numMessages][l + 1].fg = messageLog[i].fg;
+                    const char TO_PRINT[4] = {message_log[i].text[l]};
+                    strcpy(display_buffer[30 + i - num_messages][l + 1].ch, TO_PRINT);
+                    display_buffer[30 + i - num_messages][l + 1].fg = message_log[i].fg;
                 } else {
                     // Clear the rest of the buffer.
-                    strcpy(displayBuffer[30 + i - numMessages][l + 1].ch, " ");
+                    strcpy(display_buffer[30 + i - num_messages][l + 1].ch, " ");
                 }                
             }
         }
